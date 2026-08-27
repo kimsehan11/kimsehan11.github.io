@@ -68,6 +68,26 @@ test("three menu sectors are equally spaced, focusable and respect reduced motio
   assert.match(css, /@media\(prefers-reduced-motion:reduce\)\{\.hex-wheel\{animation:none\}/);
 });
 
+test("menu uses a neutral palette with contrasting labels and focus rings", async () => {
+  const css = await readFile(join(root, "app/globals.css"), "utf8");
+  const colors = [...css.matchAll(/\.hs-\d\{--angle:\d+deg;--color:(#[\da-f]{6});--label:(#[\da-f]{6})\}/g)];
+  assert.deepEqual(colors.map((match) => match[1]), ["#26272b", "#a7a9ae", "#e6e7e9"]);
+  const luminance = (hex) => {
+    const channels = hex.slice(1).match(/../g).map((channel) => {
+      const value = parseInt(channel, 16) / 255;
+      return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    });
+    return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+  };
+  for (const [, background, label] of colors) {
+    const light = Math.max(luminance(background), luminance(label));
+    const dark = Math.min(luminance(background), luminance(label));
+    assert.ok((light + 0.05) / (dark + 0.05) >= 4.5, "Menu labels must remain readable");
+  }
+  assert.match(css, /\.hex-segment span\{[^}]*color:var\(--label\)/);
+  assert.match(css, /\.hex-segment:focus-visible span\{outline:2px solid currentColor/);
+});
+
 test("profile keeps AI and deployment skills without the backend card", async () => {
   const profile = await readFile(join(output, "profile/index.html"), "utf8");
   assert.match(profile, /<h3>AI \/ DATA<\/h3>/);

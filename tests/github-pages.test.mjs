@@ -110,6 +110,46 @@ test("profile places the portrait below the name and uses unhighlighted two-line
   assert.ok(exported.has("profile/kim-sehan.jpg"));
 });
 
+test("hairstyle results keep conversation and showcase images in independent columns", async () => {
+  const html = await readFile(join(output, "project/hairstyle-is-all-you-need/index.html"), "utf8");
+  const results = html.match(/<section class="project-section project-section--results">([\s\S]*?)<\/section>/)?.[1];
+  assert.ok(results, "Expected the Hairstyle results section");
+  const groups = [...results.matchAll(/data-image-group="([^"]+)"/g)].map((match) => match[1]);
+  assert.deepEqual(groups, ["conversation", "showcase"]);
+  const conversation = results.split('data-image-group="conversation"')[1].split('data-image-group="showcase"')[0];
+  const showcase = results.split('data-image-group="showcase"')[1];
+  const sources = (markup) => [...markup.matchAll(/<img\b[^>]*src="([^"]+)"/g)].map((match) => match[1]);
+  assert.deepEqual(sources(conversation), [
+    "/projects/hairstyle/chat-user-photo-cropped-v2.png",
+    "/projects/hairstyle/chat-request-upscaled.png",
+    "/projects/hairstyle/personalized-recommendation.png",
+  ]);
+  assert.deepEqual(sources(showcase), [
+    "/projects/hairstyle/style-gallery.png",
+    "/projects/hairstyle/virtual-try-on-female.png",
+    "/projects/hairstyle/virtual-try-on-male.png",
+  ]);
+  assert.match(conversation, /헤어스타일 생성 요청 예시/);
+  assert.match(conversation, /추천 결과 및 대화 내용/);
+  assert.match(showcase, /<figcaption>갤러리<\/figcaption>/);
+  assert.match(showcase, /<figcaption>3D 뷰 예시<\/figcaption>/);
+  for (const slug of slugs.filter((slug) => slug !== "hairstyle-is-all-you-need")) {
+    const other = await readFile(join(output, `project/${slug}/index.html`), "utf8");
+    assert.doesNotMatch(other, /data-image-group=/);
+  }
+});
+
+test("results columns shrink to fit and do not share fixed image rows or heights", async () => {
+  const css = await readFile(join(root, "app/globals.css"), "utf8");
+  assert.match(css, /\.project-image-column\{display:flex;flex-direction:column;gap:20px;min-width:0\}/);
+  assert.match(css, /\.project-section--results \.project-section-images\{[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(css, /\.project-section--results \.project-section-grid>\*\{min-width:0\}/);
+  assert.match(css, /\.project-section--results \.project-section-images figure img\{width:100%;max-width:100%;height:auto;max-height:none;object-fit:contain\}/);
+  assert.doesNotMatch(css, /minmax\((?:250|280|340)px|\.result-[\w-]+\{[^}]*grid-row:/);
+  assert.match(css, /@media\(max-width:1200px\)\{\s*\.project-section--results \.project-section-grid\{grid-template-columns:minmax\(0,1fr\)/);
+  assert.match(css, /\.project-section-images,\.project-section--results \.project-section-images\{grid-template-columns:1fr\}/);
+});
+
 test("exports all portfolio routes as directly accessible HTML", async () => {
   assert.equal(slugs.length, 3);
   const pages = ["index.html", "main/index.html", "profile/index.html", "project/index.html", "404.html", ...slugs.map((slug) => `project/${slug}/index.html`)];

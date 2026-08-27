@@ -133,7 +133,22 @@ button { font:inherit; }
 .project-section-images .overview-wide{grid-column:1/-1}.project-section-images .overview-wide>div{height:auto;max-height:none}.project-section-images .overview-wide img{height:auto;max-height:none}
 .sheet-paper{display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:13px 17px;border:1px solid #111;color:#111;font:700 12px Manrope,sans-serif;letter-spacing:.12em;text-decoration:none;transition:background .2s,color .2s}.sheet-paper:hover{background:#111;color:#fff}
 .project-section-images .overview-vto>div{height:clamp(210px,20vw,280px)}.project-section-images .overview-vto img{width:100%;height:100%;object-fit:fill}
-.project-section--results .project-section-grid{grid-template-columns:minmax(250px,.72fr) minmax(0,1.8fr);gap:4vw}.project-section--results .project-section-images{grid-template-columns:minmax(280px,1fr) minmax(340px,1.22fr);grid-template-rows:auto auto auto;align-items:start;gap:30px 38px}.project-section--results .project-section-images figure{grid-column:auto}.project-section--results .project-section-images figcaption{margin-bottom:14px;font-size:16px}.project-section--results .result-user-photo{grid-column:1;grid-row:1}.project-section--results .result-request{grid-column:1;grid-row:2}.project-section--results .result-recommendation-full{grid-column:1;grid-row:3}.project-section--results .result-gallery{grid-column:2;grid-row:1}.project-section--results .result-vto-female{grid-column:2;grid-row:2}.project-section--results .result-vto-male{grid-column:2;grid-row:3;margin-top:-8px}.project-section--results .project-section-images figure>div{height:auto;max-height:none}.project-section--results .project-section-images img{height:auto;max-height:none}.project-section--results .result-user-photo>div{height:210px}.project-section--results .result-user-photo img{width:100%;height:100%;object-fit:cover;object-position:center}.project-section--results .result-request>div,.project-section--results .result-recommendation-full>div{height:auto}.project-section--results .result-request img,.project-section--results .result-recommendation-full img{width:100%;height:auto;object-fit:contain}.project-section--results .result-gallery>div{height:280px}.project-section--results .result-gallery img{object-fit:cover;object-position:center top}.project-section--results .result-vto-female>div,.project-section--results .result-vto-male>div{height:250px}.project-section--results .result-vto-female img,.project-section--results .result-vto-male img{object-fit:cover;object-position:center}
+.project-section--results .project-section-grid{grid-template-columns:minmax(0,.72fr) minmax(0,1.8fr);gap:clamp(24px,3vw,40px)}
+.project-section--results .project-section-grid>*{min-width:0}
+.project-section--results .project-section-images{width:100%;min-width:0;max-width:100%;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:clamp(18px,2vw,28px)}
+.project-image-column{display:flex;flex-direction:column;gap:20px;min-width:0}
+.project-section--results .project-section-images figure{grid-column:auto;min-width:0;width:100%;max-width:100%}
+.project-section--results .project-section-images figcaption{margin-bottom:14px;font-size:16px}
+.project-section--results .project-section-images figure>div{height:auto;max-height:none}
+.project-section--results .project-section-images figure img{width:100%;max-width:100%;height:auto;max-height:none;object-fit:contain}
+@media(max-width:1200px){
+  .project-section--results .project-section-grid{grid-template-columns:minmax(0,1fr);gap:32px}
+  .project-section--results .project-section-copy{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+  .project-section--results .project-section-block+.project-section-block{margin-top:0}
+}
+@media(max-width:760px){
+  .project-section--results .project-section-copy{grid-template-columns:minmax(0,1fr)}
+}
 
 .resume-page{min-height:100svh;background:#fafafa;color:#171717;padding:0 12vw 55px}
 .resume-ks{top:28px;left:32px}.resume-hero{min-height:850px;padding:110px 0 100px}

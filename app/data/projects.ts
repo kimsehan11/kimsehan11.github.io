@@ -8,6 +8,7 @@ export type ProjectSectionImage = {
   alt: string;
   caption?: string;
   className?: string;
+  group?: "conversation" | "showcase";
 };
 
 export type ProjectCodeFlowStep = {
@@ -131,34 +132,40 @@ export const projects: Project[] = [
             alt: "헤어스타일 상담에 사용된 사용자 사진",
             caption: "헤어스타일 생성 요청 예시",
             className: "result-user-photo",
+            group: "conversation",
           },
           {
             src: "/projects/hairstyle/chat-request-upscaled.png",
             alt: "애즈펌과 레드브라운 스타일을 요청하는 사용자 메시지",
             className: "result-request",
+            group: "conversation",
           },
           {
             src: "/projects/hairstyle/personalized-recommendation.png",
             alt: "사용자 요청을 반영한 헤어스타일 결과와 추천 이유를 설명하는 전체 대화",
             caption: "추천 결과 및 대화 내용",
             className: "result-recommendation-full",
+            group: "conversation",
           },
           {
             src: "/projects/hairstyle/style-gallery.png",
             alt: "다양한 헤어스타일 가상 체험 결과 갤러리",
             caption: "갤러리",
             className: "result-gallery",
+            group: "showcase",
           },
           {
             src: "/projects/hairstyle/virtual-try-on-female.png",
             alt: "여성 이미지에 적용된 헤어스타일 가상 체험 결과",
             caption: "3D 뷰 예시",
             className: "result-vto-female",
+            group: "showcase",
           },
           {
             src: "/projects/hairstyle/virtual-try-on-male.png",
             alt: "남성 이미지에 적용된 헤어스타일 가상 체험 결과",
             className: "result-vto-male",
+            group: "showcase",
           },
         ],
       },

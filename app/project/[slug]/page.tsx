@@ -1,6 +1,28 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { projects } from "../../data/projects";
+import { projects, type ProjectSectionImage } from "../../data/projects";
+
+function ProjectImages({ images }: { images: ProjectSectionImage[] }) {
+  const renderImage = (item: ProjectSectionImage) => (
+    <figure className={item.className} key={item.src}>
+      {item.caption && <figcaption>{item.caption}</figcaption>}
+      <div><img src={item.src} alt={item.alt} /></div>
+    </figure>
+  );
+  const groups = [...new Set(images.map((item) => item.group ?? "default"))];
+
+  return (
+    <div className="project-section-images">
+      {images.some((item) => item.group)
+        ? groups.map((group) => (
+          <div className="project-image-column" data-image-group={group} key={group}>
+            {images.filter((item) => (item.group ?? "default") === group).map(renderImage)}
+          </div>
+        ))
+        : images.map(renderImage)}
+    </div>
+  );
+}
 
 export function generateStaticParams() {
   return projects.map(({ slug }) => ({ slug }));
@@ -92,14 +114,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                 </div>
               )}
               {!section.flow && section.images && (
-                <div className="project-section-images">
-                  {section.images.map((item) => (
-                    <figure className={item.className} key={item.src}>
-                      {item.caption && <figcaption>{item.caption}</figcaption>}
-                      <div><img src={item.src} alt={item.alt} /></div>
-                    </figure>
-                  ))}
-                </div>
+                <ProjectImages images={section.images} />
               )}
             </div>
           </section>

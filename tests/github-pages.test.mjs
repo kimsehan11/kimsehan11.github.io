@@ -32,13 +32,40 @@ test("intro keeps the portfolio entry link without the KS corner button", async 
   assert.match(main, /class="mark mark-light main-ks"/);
 });
 
-test("portfolio labels use the 2024–2026 range and LAB keeps the research lab link", async () => {
+test("portfolio labels use the 2024–2026 range", async () => {
   const intro = await readFile(join(output, "index.html"), "utf8");
   const main = await readFile(join(output, "main/index.html"), "utf8");
   assert.match(intro, /SELECTED WORKS — 2024–2026/);
   assert.match(main, /PORTFOLIO \/ 2024–2026/);
-  assert.match(main, /<a\b[^>]*href="https:\/\/ssu-humane\.github\.io\/"[^>]*><i><\/i><span>LAB<\/span><\/a>/);
-  assert.doesNotMatch(main, /<span>RESEARCH<\/span>/);
+});
+
+test("main navigation contains only PROJECT, PROFILE and GITHUB", async () => {
+  const main = await readFile(join(output, "main/index.html"), "utf8");
+  const menu = main.match(/<nav\b[^>]*class="hex-wheel"[^>]*>([\s\S]*?)<\/nav>/);
+  assert.ok(menu, "Expected a semantic navigation landmark");
+  const links = [...menu[1].matchAll(/<a\b([^>]+)><span>([^<]+)<\/span><\/a>/g)];
+  assert.equal((menu[1].match(/<a\b/g) ?? []).length, 3);
+  assert.deepEqual(links.map((link) => link[2]), ["PROJECT", "PROFILE", "GITHUB"]);
+  const destinations = ["/project/", "/profile/", "https://github.com/kimsehan11"];
+  links.forEach((link, index) => {
+    assert.ok(link[1].includes(`href="${destinations[index]}"`));
+    assert.ok(link[1].includes(`class="hex-segment hs-${index + 1}"`));
+  });
+  assert.match(links[2][1], /target="_blank"/);
+  assert.match(links[2][1], /rel="noreferrer"/);
+  assert.doesNotMatch(main, /<span>(?:CONCEPT|LAB|RESEARCH)<\/span>|href="\/concept\/?"/);
+  assert.ok(!exported.has("concept/index.html"), "The removed Concept page should not be published");
+  const profile = await readFile(join(output, "profile/index.html"), "utf8");
+  assert.match(profile, /숭실대학교 HUMANE Lab/);
+});
+
+test("three menu sectors are equally spaced, focusable and respect reduced motion", async () => {
+  const css = await readFile(join(root, "app/globals.css"), "utf8");
+  const sectors = [...css.matchAll(/\.hs-(\d)\{--angle:(\d+)deg;/g)].map((match) => [Number(match[1]), Number(match[2])]);
+  assert.deepEqual(sectors, [[1, 0], [2, 120], [3, 240]]);
+  assert.match(css, /\.hex-wheel:hover,\.hex-wheel:focus-within\{animation-play-state:paused\}/);
+  assert.match(css, /\.hex-segment:focus-visible span\{outline:2px solid/);
+  assert.match(css, /@media\(prefers-reduced-motion:reduce\)\{\.hex-wheel\{animation:none\}/);
 });
 
 test("profile keeps AI and deployment skills without the backend card", async () => {
@@ -64,7 +91,7 @@ test("profile places the portrait below the name and uses unhighlighted two-line
 
 test("exports all portfolio routes as directly accessible HTML", async () => {
   assert.equal(slugs.length, 3);
-  const pages = ["index.html", "main/index.html", "concept/index.html", "profile/index.html", "project/index.html", "404.html", ...slugs.map((slug) => `project/${slug}/index.html`)];
+  const pages = ["index.html", "main/index.html", "profile/index.html", "project/index.html", "404.html", ...slugs.map((slug) => `project/${slug}/index.html`)];
   for (const page of pages) {
     assert.ok(exported.has(page), `Missing page: ${page}`);
     const html = await readFile(join(output, page), "utf8");

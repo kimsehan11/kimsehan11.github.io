@@ -10,14 +10,12 @@ export default function MainPage() {
         <p>언어, 이미지, 지식 검색을 연결해 실제로 작동하는 AI를 만듭니다.</p>
       </section>
       <section className="hex-stage">
-        <div className="hex-wheel">
-          <Link className="hex-segment hs-1" href="/project"><i /><span>PROJECT</span></Link>
-          <a className="hex-segment hs-2" href="https://ssu-humane.github.io/" target="_blank" rel="noreferrer"><i /><span>LAB</span></a>
-          <Link className="hex-segment hs-3" href="/profile"><i /><span>PROFILE</span></Link>
-          <Link className="hex-segment hs-4" href="/concept"><i /><span>CONCEPT</span></Link>
-          <a className="hex-segment hs-5" href="https://github.com/kimsehan11" target="_blank" rel="noreferrer"><i /><span>GITHUB</span></a>
-          <div className="hex-core">KS</div>
-        </div>
+        <nav className="hex-wheel" aria-label="포트폴리오 메뉴">
+          <Link className="hex-segment hs-1" href="/project"><span>PROJECT</span></Link>
+          <Link className="hex-segment hs-2" href="/profile"><span>PROFILE</span></Link>
+          <a className="hex-segment hs-3" href="https://github.com/kimsehan11" target="_blank" rel="noreferrer"><span>GITHUB</span></a>
+          <div className="hex-core" aria-hidden="true">KS</div>
+        </nav>
       </section>
       <p className="select-word" aria-hidden="true">SELECT</p>
       <div className="select-caption">

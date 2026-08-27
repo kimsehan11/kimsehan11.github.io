@@ -16,7 +16,7 @@ export default function IntroPage() {
         </Link>
       </div>
       <div className="aurora" aria-hidden="true"><span /><span /><span /></div>
-      <p className="intro-index">SELECTED WORKS — 2025</p>
+      <p className="intro-index">SELECTED WORKS — 2024–2026</p>
     </main>
   );
 }

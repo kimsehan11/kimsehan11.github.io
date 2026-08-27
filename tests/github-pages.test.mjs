@@ -32,6 +32,15 @@ test("intro keeps the portfolio entry link without the KS corner button", async 
   assert.match(main, /class="mark mark-light main-ks"/);
 });
 
+test("portfolio labels use the 2024–2026 range and LAB keeps the research lab link", async () => {
+  const intro = await readFile(join(output, "index.html"), "utf8");
+  const main = await readFile(join(output, "main/index.html"), "utf8");
+  assert.match(intro, /SELECTED WORKS — 2024–2026/);
+  assert.match(main, /PORTFOLIO \/ 2024–2026/);
+  assert.match(main, /<a\b[^>]*href="https:\/\/ssu-humane\.github\.io\/"[^>]*><i><\/i><span>LAB<\/span><\/a>/);
+  assert.doesNotMatch(main, /<span>RESEARCH<\/span>/);
+});
+
 test("exports all portfolio routes as directly accessible HTML", async () => {
   assert.equal(slugs.length, 3);
   const pages = ["index.html", "main/index.html", "concept/index.html", "profile/index.html", "project/index.html", "404.html", ...slugs.map((slug) => `project/${slug}/index.html`)];

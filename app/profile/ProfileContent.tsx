@@ -28,7 +28,6 @@ export default function ProfileContent() {
         <h2>SKILLS</h2>
         <div className="resume-skills">
           <div><h3>AI / DATA</h3><p>Python · PyTorch · TensorFlow · Keras · Transformers · LangChain · FAISS</p></div>
-          <div><h3>BACKEND</h3><p>Django · FastAPI · MySQL</p></div>
           <div><h3>DEV / DEPLOY</h3><p>Git · Docker · AWS</p></div>
         </div>
       </section>

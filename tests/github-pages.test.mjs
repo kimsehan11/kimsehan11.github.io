@@ -41,6 +41,13 @@ test("portfolio labels use the 2024–2026 range and LAB keeps the research lab 
   assert.doesNotMatch(main, /<span>RESEARCH<\/span>/);
 });
 
+test("profile keeps AI and deployment skills without the backend card", async () => {
+  const profile = await readFile(join(output, "profile/index.html"), "utf8");
+  assert.match(profile, /<h3>AI \/ DATA<\/h3>/);
+  assert.match(profile, /<h3>DEV \/ DEPLOY<\/h3>/);
+  assert.doesNotMatch(profile, /<h3>BACKEND<\/h3>|Django|FastAPI|MySQL/);
+});
+
 test("exports all portfolio routes as directly accessible HTML", async () => {
   assert.equal(slugs.length, 3);
   const pages = ["index.html", "main/index.html", "concept/index.html", "profile/index.html", "project/index.html", "404.html", ...slugs.map((slug) => `project/${slug}/index.html`)];

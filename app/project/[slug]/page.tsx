@@ -1,0 +1,119 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { projects } from "../../data/projects";
+
+export function generateStaticParams() {
+  return projects.map(({ slug }) => ({ slug }));
+}
+
+export default async function ProjectDetail({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = projects.find((item) => item.slug === slug);
+  if (!project) notFound();
+
+  return (
+    <main className={`project-modal-page modal-${project.index}`}>
+      <div className="modal-backdrop" aria-hidden="true">
+        {projects.map((item) => <span key={item.slug}>{item.title}</span>)}
+      </div>
+      <Link className="mark mark-dark modal-ks" href="/project" aria-label="프로젝트 목록으로 돌아가기">KS</Link>
+      <article className="project-sheet">
+        <header className="sheet-meta">
+          <span>PROJECT {project.index}</span>
+          <span>{project.type}</span>
+          <span>{project.period}</span>
+        </header>
+        <section className="sheet-title">
+          <p>KIM SEHAN / SELECTED WORK</p>
+          <h1>{project.title}</h1>
+        </section>
+        <section className="sheet-content">
+          <div>
+            <p className="sheet-label">OVERVIEW</p>
+            <p className="sheet-description">{project.description}</p>
+            {project.paper && (
+              <a className="sheet-paper" href={project.paper.href} target="_blank" rel="noreferrer">
+                {project.paper.label} <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+          <div>
+            <p className="sheet-label">MY WORK</p>
+            <ul>{project.contributions.map((item) => <li key={item}>{item}</li>)}</ul>
+          </div>
+        </section>
+        {project.sections?.map((section) => (
+          <section className={`project-section project-section--${section.layout ?? "standard"}`} key={section.title}>
+            <h2>{section.title}</h2>
+            <div className="project-section-grid">
+              {section.flow && (
+                <div className="project-code-flow" role="group" aria-label={section.flow.label}>
+                  {section.flow.entry.map((step) => (
+                    <div className="code-flow-stage" key={step.eyebrow}>
+                      <article className="code-flow-node">
+                        <span>{step.eyebrow}</span>
+                        <code>{step.file}</code>
+                        <h3>{step.title}</h3>
+                        <p>{step.detail}</p>
+                      </article>
+                      <i className="code-flow-arrow" aria-hidden="true">↓</i>
+                    </div>
+                  ))}
+                  <div className="code-flow-branch-label"><span>TOOL BRANCHES</span></div>
+                  <div className="code-flow-branches">
+                    {section.flow.branches.map((step) => (
+                      <article className="code-flow-node code-flow-node--branch" key={step.eyebrow}>
+                        <span>{step.eyebrow}</span>
+                        <code>{step.file}</code>
+                        <h3>{step.title}</h3>
+                        <p>{step.detail}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <i className="code-flow-arrow code-flow-arrow--merge" aria-hidden="true">↓</i>
+                  <article className="code-flow-node code-flow-node--output">
+                    <span>{section.flow.output.eyebrow}</span>
+                    <code>{section.flow.output.file}</code>
+                    <h3>{section.flow.output.title}</h3>
+                    <p>{section.flow.output.detail}</p>
+                  </article>
+                </div>
+              )}
+              {!section.flow && (
+                <div className="project-section-copy">
+                  {section.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                  {section.bullets && <ul>{section.bullets.map((item) => <li key={item}>{item}</li>)}</ul>}
+                  {section.blocks?.map((block) => (
+                    <div className="project-section-block" key={block.title}>
+                      <h3>{block.title}</h3>
+                      <ul>{block.items.map((item) => <li key={item}>{item}</li>)}</ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {!section.flow && section.images && (
+                <div className="project-section-images">
+                  {section.images.map((item) => (
+                    <figure className={item.className} key={item.src}>
+                      {item.caption && <figcaption>{item.caption}</figcaption>}
+                      <div><img src={item.src} alt={item.alt} /></div>
+                    </figure>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        ))}
+        <div className="sheet-tags">{project.stack.map((item) => <span key={item}>{item}</span>)}</div>
+        {project.presentation && (
+          <a className="sheet-presentation" href={project.presentation.href} target="_blank" rel="noreferrer">
+            <span>{project.presentation.label}</span><span>OPEN ↗</span>
+          </a>
+        )}
+        <a className="sheet-github" href={project.github} target="_blank" rel="noreferrer">
+          <span>GITHUB REPOSITORY</span><span>OPEN ↗</span>
+        </a>
+      </article>
+    </main>
+  );
+}

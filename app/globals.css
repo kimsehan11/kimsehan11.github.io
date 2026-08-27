@@ -52,7 +52,6 @@ button { font:inherit; }
 .select-intro p{margin:0;max-width:285px;font-size:13px;line-height:1.7;color:#777;word-break:keep-all}
 .hex-stage{position:absolute;left:59%;top:50%;width:min(43vw,580px);aspect-ratio:1;transform:translate(-50%,-50%)}
 .hex-wheel{position:absolute;inset:15%;animation:hex-turn 125s linear infinite;filter:drop-shadow(0 18px 20px rgba(0,0,0,.08))}
-.hex-wheel:hover,.hex-wheel:focus-within{animation-play-state:paused}
 /* Each clipped circle covers 120 degrees; rotate the three links to fill the wheel. */
 .hex-segment{--angle:0deg;--color:#e6e7e9;--label:#111111;position:absolute;inset:0;display:block;background:var(--color);border-radius:50%;clip-path:polygon(50% 50%,50% 0%,100% 0%,100% 78.8675%);transform:rotate(var(--angle)) scale(.985);transform-origin:50% 50%;transition:filter .25s ease;cursor:pointer}
 .hex-segment:hover{filter:brightness(1.08)}

@@ -59,11 +59,12 @@ test("main navigation contains only PROJECT, PROFILE and GITHUB", async () => {
   assert.match(profile, /숭실대학교 HUMANE Lab/);
 });
 
-test("three menu sectors are equally spaced, focusable and respect reduced motion", async () => {
+test("three menu sectors keep rotating on hover and focus while respecting reduced motion", async () => {
   const css = await readFile(join(root, "app/globals.css"), "utf8");
   const sectors = [...css.matchAll(/\.hs-(\d)\{--angle:(\d+)deg;/g)].map((match) => [Number(match[1]), Number(match[2])]);
   assert.deepEqual(sectors, [[1, 0], [2, 120], [3, 240]]);
-  assert.match(css, /\.hex-wheel:hover,\.hex-wheel:focus-within\{animation-play-state:paused\}/);
+  assert.match(css, /\.hex-wheel\{[^}]*animation:hex-turn 125s linear infinite/);
+  assert.doesNotMatch(css, /animation-play-state:\s*paused/);
   assert.match(css, /\.hex-segment:focus-visible span\{outline:2px solid/);
   assert.match(css, /@media\(prefers-reduced-motion:reduce\)\{\.hex-wheel\{animation:none\}/);
 });

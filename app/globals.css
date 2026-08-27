@@ -138,8 +138,10 @@ a.hex-segment i{cursor:pointer}
 .resume-ks{top:28px;left:32px}.resume-hero{min-height:850px;padding:110px 0 100px}
 .resume-overline{margin:0 0 45px;font-size:9px;letter-spacing:.2em;color:#888}
 .resume-hero h1{margin:0;font:400 clamp(76px,9vw,138px)/.88 "Instrument Serif",Georgia,serif;letter-spacing:-.045em}
-.resume-intro{max-width:970px;margin:165px 0 0;font-size:18px;line-height:1.9;word-break:keep-all}
-.resume-intro p{margin:0 0 25px}.resume-intro mark{padding:3px 7px;background:#24242c;color:white;border-radius:3px}
+.resume-portrait{display:block;width:240px;max-width:100%;height:auto;margin-top:40px}
+.resume-intro{max-width:970px;margin:48px 0 0;font-size:18px;line-height:1.9;word-break:keep-all}
+.resume-intro p{margin:0 0 25px}
+@media(min-width:1200px){.resume-intro-line{display:block}}
 .resume-section{display:grid;grid-template-columns:230px 1fr;gap:6vw;padding:75px 0;border-top:1px solid #bdbdbd}
 .resume-section>h2{margin:0;font:600 13px Manrope,sans-serif;letter-spacing:.08em}
 .resume-list article{display:grid;grid-template-columns:130px 1fr;gap:35px;padding:0 0 48px;margin-bottom:48px;border-bottom:1px solid #ddd}
@@ -156,5 +158,5 @@ a.hex-segment i{cursor:pointer}
   .project-modal-page{padding:52px 12px}.modal-close{top:8px;right:10px}.sheet-meta{grid-template-columns:1fr 1fr}.sheet-meta span:nth-child(2){display:none}.sheet-title{padding:50px 24px 35px}.sheet-title h1{font-size:54px}.sheet-visual{grid-template-columns:1fr;padding:35px 24px}.sheet-orbit{width:76vw}.sheet-content{grid-template-columns:1fr;padding:50px 24px;gap:35px}.project-section{padding:45px 24px}.project-section-grid,.project-section--results .project-section-grid,.project-section--flow .project-section-grid{grid-template-columns:1fr;gap:38px}.project-section--flow .project-section-copy{position:static}.project-section-images,.project-section--results .project-section-images{grid-template-columns:1fr}.project-section--results .project-section-images figure{grid-column:1;grid-row:auto}.project-section-images figure:last-child,.project-section-images figure:nth-child(n+4){grid-column:1}.code-flow-branches{grid-template-columns:1fr}.code-flow-node--branch{min-height:auto}.sheet-tags{padding:0 24px 45px}.sheet-github,.sheet-presentation{padding:22px 24px}
   .select-intro{left:22px;top:18%;width:240px;transform:none}.select-intro h1{font-size:43px}.select-intro p{display:none}.hex-stage{left:50%;top:61%;width:92vw}.select-word{right:-4px;font-size:54px}.select-caption{bottom:18px;gap:12px;width:max-content}.hex-segment span{font-size:8px;top:10%}.main-ks{top:18px;left:18px}
   .info-page{padding:110px 22px 50px}.info-hero{grid-template-columns:1fr;gap:35px}.info-hero h1{font-size:76px}.info-grid,.concept-bands{grid-template-columns:1fr}.info-grid article{min-height:220px;border-right:0;border-bottom:1px solid var(--line)}.concept-bands>div{border-right:0;border-bottom:1px solid var(--line)}.next-hero h1{font-size:100px}.query-flow{font-size:8px}
-  .resume-page{padding:0 22px 40px}.resume-hero{min-height:auto;padding:105px 0 80px}.resume-hero h1{font-size:65px}.resume-intro{margin-top:100px;font-size:15px}.resume-section{grid-template-columns:1fr;gap:45px;padding:55px 0}.resume-list article{grid-template-columns:1fr;gap:15px}.resume-list h3{font-size:23px}.resume-skills{grid-template-columns:1fr}.resume-skills>div{min-height:170px}.resume-skills p{margin-top:45px}.resume-footer{gap:25px;font-size:8px}
+  .resume-page{padding:0 22px 40px}.resume-hero{min-height:auto;padding:105px 0 80px}.resume-hero h1{font-size:65px}.resume-portrait{width:200px;margin-top:32px}.resume-intro{margin-top:32px;font-size:15px}.resume-section{grid-template-columns:1fr;gap:45px;padding:55px 0}.resume-list article{grid-template-columns:1fr;gap:15px}.resume-list h3{font-size:23px}.resume-skills{grid-template-columns:1fr}.resume-skills>div{min-height:170px}.resume-skills p{margin-top:45px}.resume-footer{gap:25px;font-size:8px}
 }

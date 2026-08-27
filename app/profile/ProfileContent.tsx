@@ -7,11 +7,21 @@ export default function ProfileContent() {
       <section className="resume-hero">
         <p className="resume-overline">PROFILE / AI ENGINEER</p>
         <h1>KIM SEHAN</h1>
+        <img className="resume-portrait" src="/profile/kim-sehan.jpg" alt="김세한 프로필 사진" width={1434} height={1434} />
         <div className="resume-intro">
           <p>반갑습니다.</p>
-          <p>저는 사람과 맥락을 이해하는 AI를 연구하고, 이를 실제 서비스로 구현하는 AI 엔지니어입니다. 언어·이미지·검색 지식을 연결해 <mark>사용자에게 필요한 경험을 만드는 것</mark>에 관심이 있습니다.</p>
-          <p>논문의 방법론을 코드로 재현하는 데서 멈추지 않고, 모델과 데이터 파이프라인을 설계한 뒤 백엔드와 연결하여 <mark>동작하는 AI 서비스로 완성</mark>하는 과정을 경험했습니다.</p>
-          <p>결과를 정량적으로 평가하고 문제의 원인을 분석하며, 팀과 함께 <mark>더 신뢰할 수 있는 AI로 개선</mark>하는 것을 중요하게 생각합니다.</p>
+          <p>
+            <span className="resume-intro-line">저는 사람과 맥락을 이해하는 AI를 연구하고 구현하는 AI 엔지니어입니다.</span>{" "}
+            <span className="resume-intro-line">언어·이미지·검색 지식을 연결해 사용자에게 필요한 경험을 만드는 것에 관심이 있습니다.</span>
+          </p>
+          <p>
+            <span className="resume-intro-line">논문의 방법론을 코드로 재현하는 데서 멈추지 않고,</span>{" "}
+            <span className="resume-intro-line">모델·데이터 파이프라인을 설계하고 백엔드와 연결해, 동작하는 AI 서비스로 완성했습니다.</span>
+          </p>
+          <p>
+            <span className="resume-intro-line">결과를 정량적으로 평가하고 문제의 원인을 분석하며,</span>{" "}
+            <span className="resume-intro-line">팀과 함께 더 신뢰할 수 있는 AI로 개선하는 것을 중요하게 생각합니다.</span>
+          </p>
         </div>
       </section>
       <section className="resume-section"><h2>EDUCATION</h2><div className="resume-list"><article><time>AI CAMP</time><div><h3>SK Networks Family AI Camp</h3><p>Python 데이터 분석, 머신러닝·딥러닝, 자연어 처리 및 생성형 AI 교육 이수</p></div></article></div></section>

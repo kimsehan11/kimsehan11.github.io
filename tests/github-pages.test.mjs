@@ -48,6 +48,20 @@ test("profile keeps AI and deployment skills without the backend card", async ()
   assert.doesNotMatch(profile, /<h3>BACKEND<\/h3>|Django|FastAPI|MySQL/);
 });
 
+test("profile places the portrait below the name and uses unhighlighted two-line introductions", async () => {
+  const profile = await readFile(join(output, "profile/index.html"), "utf8");
+  assert.match(profile, /<h1>KIM SEHAN<\/h1><img\b[^>]*class="resume-portrait"[^>]*src="\/profile\/kim-sehan\.jpg"[^>]*alt="김세한 프로필 사진"/);
+  assert.doesNotMatch(profile, /<mark\b/);
+  const lines = [...profile.matchAll(/<span class="resume-intro-line">([^<]+)<\/span>/g)].map((match) => match[1]);
+  assert.equal(lines.length, 6);
+  assert.ok(lines[0].endsWith("AI 엔지니어입니다."));
+  assert.ok(lines[1].startsWith("언어·이미지·검색"));
+  for (let index = 0; index < lines.length; index += 2) {
+    assert.ok(lines[index + 1].length > lines[index].length, "The second line should be longer than the first");
+  }
+  assert.ok(exported.has("profile/kim-sehan.jpg"));
+});
+
 test("exports all portfolio routes as directly accessible HTML", async () => {
   assert.equal(slugs.length, 3);
   const pages = ["index.html", "main/index.html", "concept/index.html", "profile/index.html", "project/index.html", "404.html", ...slugs.map((slug) => `project/${slug}/index.html`)];

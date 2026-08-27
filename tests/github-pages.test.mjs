@@ -24,6 +24,14 @@ const htmlFiles = [...exported].filter((file) => file.endsWith(".html"));
 const projectSource = await readFile(join(root, "app/data/projects.ts"), "utf8");
 const slugs = [...projectSource.matchAll(/\bslug:\s*"([^"]+)"/g)].map((match) => match[1]);
 
+test("intro keeps the portfolio entry link without the KS corner button", async () => {
+  const intro = await readFile(join(output, "index.html"), "utf8");
+  assert.doesNotMatch(intro, /<a\b[^>]*class="[^"]*\bmark\b/);
+  assert.match(intro, /<a\b[^>]*class="enter-link"[^>]*href="\/main\/"/);
+  const main = await readFile(join(output, "main/index.html"), "utf8");
+  assert.match(main, /class="mark mark-light main-ks"/);
+});
+
 test("exports all portfolio routes as directly accessible HTML", async () => {
   assert.equal(slugs.length, 3);
   const pages = ["index.html", "main/index.html", "concept/index.html", "profile/index.html", "project/index.html", "404.html", ...slugs.map((slug) => `project/${slug}/index.html`)];

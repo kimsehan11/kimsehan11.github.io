@@ -3,9 +3,6 @@ import Link from "next/link";
 export default function IntroPage() {
   return (
     <main className="intro">
-      <Link className="mark mark-dark" href="/main" aria-label="포트폴리오 메인으로 이동">
-        KS
-      </Link>
       <div className="intro-copy">
         <p className="eyebrow">KIM SEHAN · AI ENGINEER</p>
         <h1>

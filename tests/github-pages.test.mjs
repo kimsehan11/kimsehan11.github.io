@@ -246,6 +246,10 @@ test("knowledge follows the presentation order and preserves the paper and prese
     assert.ok(html.includes(detail), "Missing presentation detail: " + detail);
   }
   assert.doesNotMatch(html, /README|sheet-demo/);
+  const captions = [...html.matchAll(/<(?:figcaption|caption)>([^<]+)<\/(?:figcaption|caption)>/g)].map((match) => match[1]);
+  assert.ok(captions.includes("KNOWLEDGE CONSOLIDATION"));
+  assert.ok(captions.includes("평가 데이터셋"));
+  assert.ok(captions.every((caption) => !caption.includes("발표자료 p.")));
 });
 
 test("knowledge separates paper and reproduction results with all per-dataset values", async () => {

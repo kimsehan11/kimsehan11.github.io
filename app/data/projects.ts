@@ -553,7 +553,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/knowledge-conflict.jpg",
             "alt": "LLM과 RAG의 정답 여부 조합 및 두 방향의 지식 충돌 사례",
-            "caption": "KNOWLEDGE CONFLICT · 발표자료 p.3",
+            "caption": "KNOWLEDGE CONFLICT",
             "className": "overview-wide",
             "width": 1233,
             "height": 431
@@ -576,7 +576,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/astute-overview.jpg",
             "alt": "적응적 내부 문서 생성, 출처 인지 지식 통합, 최종 답변 선택으로 이어지는 Astute RAG",
-            "caption": "ASTUTE RAG PIPELINE · 발표자료 p.4",
+            "caption": "ASTUTE RAG PIPELINE",
             "className": "overview-wide",
             "width": 1293,
             "height": 566
@@ -607,7 +607,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/pseudo-code.jpg",
             "alt": "질문, 검색 문서, 생성 문서, 출처와 반복 통합 절차를 나타낸 ASTUTE RAG 알고리즘",
-            "caption": "ASTUTE RAG PSEUDO CODE · 발표자료 p.5–6, 8, 10, 12, 14",
+            "caption": "ASTUTE RAG PSEUDO CODE",
             "className": "overview-wide",
             "width": 1161,
             "height": 424
@@ -630,7 +630,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/presentation/retrieval-augment.png",
             "alt": "apple inc 질의의 검색 링크와 스니펫, 해당 문단의 크롤링 예시",
-            "caption": "RETRIEVAL AUGMENT · 발표자료 p.7",
+            "caption": "RETRIEVAL AUGMENT",
             "className": "overview-wide"
           }
         ]
@@ -651,7 +651,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/internal-prompt.jpg",
             "alt": "질문에 관련된 문서를 생성하되 불확실하면 I don't know라고 답하도록 하는 프롬프트",
-            "caption": "INTERNAL PASSAGE PROMPT · 발표자료 p.9",
+            "caption": "INTERNAL PASSAGE PROMPT",
             "className": "overview-wide",
             "width": 1174,
             "height": 259
@@ -683,7 +683,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/combine-call.jpg",
             "alt": "외부 문서와 내부 문서를 만든 뒤 combine_passage를 호출하는 코드",
-            "caption": "PASSAGE GENERATION & COMBINATION · 발표자료 p.11",
+            "caption": "PASSAGE GENERATION & COMBINATION",
             "className": "overview-wide",
             "width": 565,
             "height": 184
@@ -715,7 +715,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/consolidation.jpg",
             "alt": "Jason Lee와 Zachary Levi를 지지하는 문서 및 무관한 문서를 세 그룹으로 분리한 예시",
-            "caption": "KNOWLEDGE CONSOLIDATION · 발표자료 p.13",
+            "caption": "KNOWLEDGE CONSOLIDATION",
             "className": "overview-wide",
             "width": 883,
             "height": 541
@@ -739,7 +739,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/finalize-answer.jpg",
             "alt": "문서 그룹별 후보에 신뢰도를 부여하고 Jason Lee를 선택하는 예시",
-            "caption": "ANSWER FINALIZATION · 발표자료 p.15",
+            "caption": "ANSWER FINALIZATION",
             "className": "overview-wide",
             "width": 901,
             "height": 556
@@ -760,7 +760,7 @@ export const projects: Project[] = [
         ],
         "tables": [
           {
-            "title": "평가 데이터셋 · 발표자료 p.16",
+            "title": "평가 데이터셋",
             "columns": [
               "데이터셋",
               "질문 특성",
@@ -816,7 +816,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/accuracy-example.jpg",
             "alt": "His Way 감독 질문의 통합, 신뢰도 평가, ANSWER 태그와 gold_answer를 보여주는 정확도 판정 예시",
-            "caption": "ACCURACY EVALUATION EXAMPLE · 발표자료 p.17",
+            "caption": "ACCURACY EVALUATION EXAMPLE",
             "className": "overview-wide",
             "width": 918,
             "height": 316
@@ -1092,7 +1092,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/corpus-updates.jpg",
             "alt": "발표자료에서 검색 코퍼스의 지속적인 업데이트 사례로 제시한 문서 변경 이력",
-            "caption": "RETRIEVAL CORPUS UPDATES · 발표자료 p.21",
+            "caption": "RETRIEVAL CORPUS UPDATES",
             "className": "overview-wide",
             "width": 909,
             "height": 415
@@ -1138,7 +1138,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/precision-example.jpg",
             "alt": "Gold Answer가 검색 문서에 포함되는지 확인하는 Retrieval Precision 예시",
-            "caption": "RETRIEVAL PRECISION · 발표자료 p.22",
+            "caption": "RETRIEVAL PRECISION",
             "className": "overview-wide",
             "width": 798,
             "height": 192
@@ -1146,7 +1146,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/precision-groups.png",
             "alt": "질문을 검색 정밀도 구간별로 나눈 뒤 그룹별 정확도를 측정하는 발표자료 도식",
-            "caption": "SPLIT TEST DATASET · 발표자료 p.23",
+            "caption": "SPLIT TEST DATASET",
             "className": "overview-wide",
             "width": 1334,
             "height": 750
@@ -1154,7 +1154,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/robustness-paper.jpg",
             "alt": "논문에서 인용한 Retrieval Precision에 따른 방법별 정확도 곡선",
-            "caption": "논문 — ROBUSTNESS · 발표자료 p.24",
+            "caption": "논문 — ROBUSTNESS",
             "className": "overview-wide",
             "width": 891,
             "height": 618
@@ -1162,7 +1162,7 @@ export const projects: Project[] = [
           {
             "src": "/projects/knowledge-conflicts/slides/robustness-reproduction.jpg",
             "alt": "재현 실험의 No RAG, RAG, Astute RAG 정확도 곡선",
-            "caption": "재현 — ROBUSTNESS · 발표자료 p.24–25",
+            "caption": "재현 — ROBUSTNESS",
             "className": "overview-wide",
             "width": 1185,
             "height": 735

@@ -518,7 +518,7 @@ export const projects: Project[] = [
     contributions: [
       "ASTUTE RAG 논문의 핵심 방법론을 코드로 재현하고 실험 파이프라인 구성",
       "PopQA·NQ·TriviaQA·BioASQ 데이터셋을 활용한 지식 충돌 평가",
-      "Mistral 기반 로컬 모델과 GPT·Gemini 계열 모델 결과 비교",
+      "Mistral-Nemo와 Gemini-2.5 Flash의 정확도 및 검색 품질별 강건성 비교",
     ],
     stack: ["Python", "PyTorch", "Transformers", "LangChain", "FAISS", "Mistral", "4-bit Quantization"],
     github: "https://github.com/kimsehan11/Knowledge-Conflicts",
@@ -532,186 +532,662 @@ export const projects: Project[] = [
     },
     sections: [
       {
-        title: "2-1. 연구 배경 및 목표",
-        blocks: [
+        "title": "2-1. 연구 목표",
+        "blocks": [
           {
-            title: "Knowledge Conflict",
-            items: [
-              "LLM의 내부 지식과 검색 문서가 서로 다른 답을 제시할 때 지식 충돌 발생",
-              "현실의 검색 결과에는 불완전하거나 무관한 문서가 포함되므로 검색 노이즈를 완전히 피하기 어려움",
-              "일반 RAG는 검색 결과를 그대로 신뢰하기 때문에 잘못된 외부 문서가 답변 품질을 떨어뜨릴 수 있음",
-            ],
+            "title": "Knowledge Conflict",
+            "items": [
+              "LLM은 틀리고 RAG는 맞는 경우, 또는 LLM은 맞지만 RAG는 틀리는 경우에 내부 지식과 외부 검색 지식이 충돌합니다.",
+              "검색 결과의 노이즈와 불완전한 검색은 현실적으로 피하기 어렵기 때문에, 검색 문서만 신뢰하는 것으로는 충돌을 해결하기 어렵습니다."
+            ]
           },
           {
-            title: "연구 목표",
-            items: [
-              "검색 결과와 모델 내부 지식을 함께 활용하는 Astute RAG 재현",
-              "불완전한 Retrieval 환경에서 일반 RAG보다 안정적인 정확도를 보이는지 검증",
-              "검색 정밀도 변화에 따른 성능을 비교해 지식 충돌 대응 강건성 분석",
-            ],
-          },
+            "title": "재현하려는 핵심 주장",
+            "items": [
+              "내부 문서와 검색 문서를 대조·통합하고 신뢰도에 따라 답변을 선택하는 ASTUTE RAG를 구현합니다.",
+              "평균 정확도뿐 아니라 검색 품질이 낮아질 때의 강건성도 일반 RAG와 비교합니다."
+            ]
+          }
         ],
-        images: [
+        "images": [
           {
-            src: "/projects/knowledge-conflicts/presentation/knowledge-conflict.png",
-            alt: "LLM 내부 지식과 RAG 검색 결과의 정답 여부에 따라 발생하는 지식 충돌 유형",
-            caption: "KNOWLEDGE CONFLICT",
-            className: "overview-wide",
-          },
-        ],
+            "src": "/projects/knowledge-conflicts/slides/knowledge-conflict.jpg",
+            "alt": "LLM과 RAG의 정답 여부 조합 및 두 방향의 지식 충돌 사례",
+            "caption": "KNOWLEDGE CONFLICT · 발표자료 p.3",
+            "className": "overview-wide",
+            "width": 1233,
+            "height": 431
+          }
+        ]
       },
       {
-        title: "2-2. Astute RAG",
-        blocks: [
+        "title": "2-2. Astute RAG 소개",
+        "blocks": [
           {
-            title: "핵심 접근",
-            items: [
-              "질문에 대해 LLM의 내부 지식으로 내부 문서를 적응적으로 생성",
-              "검색으로 확보한 외부 문서와 내부 문서를 출처 정보와 함께 통합",
-              "동일한 답을 지지하는 문서끼리 그룹화하고 무관한 문서를 분리",
-              "그룹별 근거와 내부·외부 지식의 일관성을 비교해 최종 답변 선택",
-            ],
-          },
+            "title": "내부 지식과 검색 지식의 대조·통합",
+            "items": [
+              "Adaptive Passage Generation: 질문에 대해 모델 내부 지식으로 문서를 생성하고, 더 이상 정보가 없으면 생성을 멈춥니다.",
+              "Iterative Source-aware Knowledge Consolidation: 내부·외부 문서의 출처를 유지하면서 일관된 정보와 충돌하는 정보를 정리합니다.",
+              "Answer Finalization: 문서 그룹별 답변 후보와 내부·외부 근거의 일관성을 비교해 최종 답변을 선택합니다."
+            ]
+          }
         ],
-        images: [
+        "images": [
           {
-            src: "/projects/knowledge-conflicts/presentation/astute-rag-overview.png",
-            alt: "내부 문서 생성부터 지식 통합과 답변 확정까지의 Astute RAG 전체 흐름",
-            caption: "ASTUTE RAG PIPELINE",
-            className: "overview-wide",
-          },
-        ],
+            "src": "/projects/knowledge-conflicts/slides/astute-overview.jpg",
+            "alt": "적응적 내부 문서 생성, 출처 인지 지식 통합, 최종 답변 선택으로 이어지는 Astute RAG",
+            "caption": "ASTUTE RAG PIPELINE · 발표자료 p.4",
+            "className": "overview-wide",
+            "width": 1293,
+            "height": 566
+          }
+        ]
       },
       {
-        title: "2-3. 구현 과정",
-        blocks: [
+        "title": "2-3. 구축 방식 — 의사코드",
+        "blocks": [
           {
-            title: "Retrieval Augment",
-            items: [
-              "SERPER API로 최대 30개의 검색 결과와 링크·스니펫 수집",
-              "접근 가능한 페이지를 크롤링하고 스니펫을 포함하는 문단을 외부 문서로 구성",
-            ],
+            "title": "알고리즘의 입력",
+            "items": [
+              "질문 q, 검색 문서 E, 언어 모델 M, 반복 횟수 t, 내부 문서 최대 생성 수를 입력으로 사용합니다.",
+              "문서 생성·지식 통합·최종 답변을 위한 프롬프트 p_gen, p_con, p_ans를 각각 사용합니다."
+            ]
           },
           {
-            title: "Internal & External Passages",
-            items: [
-              "정보가 불명확할 때 ‘I don’t know’를 출력하도록 하는 프롬프트로 내부 문서 생성",
-              "외부 문서와 내부 문서에 source 메타데이터를 부여해 출처를 구분한 채 결합",
-            ],
-          },
-          {
-            title: "Consolidation & Finalization",
-            items: [
-              "같은 답을 지지하는 문서를 그룹화하고 질문과 무관한 문서를 제거",
-              "LLM-as-a-judge로 각 문서 그룹의 신뢰도를 평가해 가장 근거가 강한 답변 확정",
-            ],
-          },
+            "title": "알고리즘의 처리 순서",
+            "items": [
+              "내부 문서 I를 생성하고 외부 문서 E와 합쳐 초기 문서 집합 D₀를 구성합니다.",
+              "각 문서에 내부·외부 출처 S₀를 부여합니다.",
+              "t > 1이면 지식을 반복 통합한 뒤 초기 문서와 마지막 통합 결과를 함께 고려해 답변합니다.",
+              "t = 1이면 초기 문서와 출처를 바탕으로 통합 및 최종 답변을 수행합니다."
+            ]
+          }
         ],
-        images: [
+        "images": [
           {
-            src: "/projects/knowledge-conflicts/presentation/retrieval-augment.png",
-            alt: "SERPER API 검색 결과를 크롤링해 외부 문서를 만드는 구현 예시",
-            caption: "RETRIEVAL AUGMENT",
-            className: "overview-wide",
-          },
-          {
-            src: "/projects/knowledge-conflicts/presentation/consolidation.png",
-            alt: "서로 같은 답을 주장하는 내부 및 외부 문서를 그룹화하는 과정",
-            caption: "KNOWLEDGE CONSOLIDATION",
-            className: "overview-wide",
-          },
-          {
-            src: "/projects/knowledge-conflicts/presentation/finalize-answer.png",
-            alt: "문서 그룹별 신뢰도를 평가해 최종 답변을 선택하는 과정",
-            caption: "ANSWER FINALIZATION",
-            className: "overview-wide",
-          },
-        ],
+            "src": "/projects/knowledge-conflicts/slides/pseudo-code.jpg",
+            "alt": "질문, 검색 문서, 생성 문서, 출처와 반복 통합 절차를 나타낸 ASTUTE RAG 알고리즘",
+            "caption": "ASTUTE RAG PSEUDO CODE · 발표자료 p.5–6, 8, 10, 12, 14",
+            "className": "overview-wide",
+            "width": 1161,
+            "height": 424
+          }
+        ]
       },
       {
-        title: "2-4. 정확도 재현 실험",
-        blocks: [
+        "title": "2-4. 구축 방식 — Retrieval Augment",
+        "blocks": [
           {
-            title: "실험 설계",
-            items: [
-              "NQ·TriviaQA·BioASQ·PopQA 데이터셋으로 일반 지식과 전문·희소 지식 질의 평가",
-              "No RAG·Baseline RAG·Astute RAG를 동일한 모델과 조건에서 비교",
-              "최종 답변이 데이터셋의 정답을 포함하는지를 기준으로 Accuracy 측정",
-            ],
-          },
-          {
-            title: "재현 결과",
-            items: [
-              "Mistral-Nemo 12B: Overall Accuracy 66.4로 Baseline RAG 59.8 대비 향상",
-              "Gemini-2.5 Flash: Overall Accuracy 70.2로 Baseline RAG 61.0 대비 향상",
-              "두 모델 모두 논문과 동일하게 Astute RAG가 Baseline보다 높은 성능을 보이는 경향 재현",
-            ],
-          },
+            "title": "외부 문서 E 구성",
+            "items": [
+              "SERPER API를 통해 검색 결과의 snippet과 link를 수집합니다.",
+              "30개의 검색 결과 중 접근 가능한 링크를 크롤링하고, snippet을 포함하는 문단을 외부 문서로 사용합니다.",
+              "발표 예시는 ‘apple inc’ 검색에서 링크·스니펫을 얻고 해당 웹페이지의 관련 문단을 찾는 과정을 보여줍니다."
+            ]
+          }
         ],
-        images: [
+        "images": [
           {
-            src: "/projects/knowledge-conflicts/presentation/mistral-results.png",
-            alt: "Mistral-Nemo에서 논문 결과와 재현 결과를 비교한 정확도 표",
-            caption: "MISTRAL-NEMO REPRODUCTION",
-            className: "overview-wide",
-          },
-          {
-            src: "/projects/knowledge-conflicts/presentation/gemini-results.png",
-            alt: "Gemini 모델에서 논문 결과와 재현 결과를 비교한 정확도 표",
-            caption: "GEMINI REPRODUCTION",
-            className: "overview-wide",
-          },
-        ],
+            "src": "/projects/knowledge-conflicts/presentation/retrieval-augment.png",
+            "alt": "apple inc 질의의 검색 링크와 스니펫, 해당 문단의 크롤링 예시",
+            "caption": "RETRIEVAL AUGMENT · 발표자료 p.7",
+            "className": "overview-wide"
+          }
+        ]
       },
       {
-        title: "2-5. 검색 품질별 강건성",
-        blocks: [
+        "title": "2-5. 구축 방식 — Internal Passages",
+        "blocks": [
           {
-            title: "평가 방법",
-            items: [
-              "검색 결과 중 정답 근거가 포함된 비율을 Retrieval Precision으로 정의",
-              "테스트 데이터를 Retrieval Precision 구간별로 그룹화한 뒤 각 구간의 Accuracy 측정",
-              "검색 품질이 0%에서 100%로 달라질 때 방법별 성능 변화 곡선 비교",
-            ],
-          },
-          {
-            title: "분석 결과",
-            items: [
-              "검색 정밀도가 낮은 최악의 구간에서도 Astute RAG는 Baseline보다 완만한 성능 하락을 보임",
-              "외부 검색 결과만 따르지 않고 모델 내부 문서까지 함께 평가해 전반적으로 더 높은 강건성 확보",
-              "80~90% 구간에서는 모델 자체 지식의 영향으로 Baseline보다 소폭 낮아지는 예외도 확인",
-            ],
-          },
+            "title": "내부 문서 I 생성",
+            "items": [
+              "논문에서 제시한 프롬프트를 이용해 질문에 답할 수 있는 관련 정보를 모델의 내부 지식으로 생성합니다.",
+              "정보가 불명확하거나 확신이 없으면 ‘I don’t know’라고 답하도록 지시해 불확실한 내용을 단정하지 않게 합니다.",
+              "적응적 문서 생성은 추가로 제공할 정보가 없을 때 멈추는 구조입니다."
+            ]
+          }
         ],
-        images: [
+        "images": [
           {
-            src: "/projects/knowledge-conflicts/presentation/robustness-results.png",
-            alt: "Retrieval Precision 변화에 따른 Astute RAG와 일반 RAG의 정확도 비교",
-            caption: "ROBUSTNESS BY RETRIEVAL PRECISION",
-            className: "overview-wide",
+            "src": "/projects/knowledge-conflicts/slides/internal-prompt.jpg",
+            "alt": "질문에 관련된 문서를 생성하되 불확실하면 I don't know라고 답하도록 하는 프롬프트",
+            "caption": "INTERNAL PASSAGE PROMPT · 발표자료 p.9",
+            "className": "overview-wide",
+            "width": 1174,
+            "height": 259
           },
-        ],
+          {
+            "src": "/projects/knowledge-conflicts/slides/internal-generation.jpg",
+            "alt": "모델의 내부 지식으로 문서를 생성하고 더 이상 정보가 없으면 멈추는 구조",
+            "caption": "ADAPTIVE PASSAGE GENERATION",
+            "className": "overview-wide presentation-compact",
+            "width": 751,
+            "height": 640
+          }
+        ]
       },
       {
-        title: "2-6. 결론",
-        blocks: [
+        "title": "2-6. 구축 방식 — Combine Passages",
+        "blocks": [
           {
-            title: "주요 성과",
-            items: [
-              "Astute RAG 논문의 핵심 알고리즘과 검색·통합·평가 파이프라인 구현",
-              "Mistral-Nemo와 Gemini-2.5 Flash에서 Baseline 대비 성능 향상 경향 재현",
-              "검색 품질이 낮아져 지식 충돌이 커지는 환경에서도 내부 지식을 활용해 더 안정적인 답변 생성",
-            ],
-          },
-          {
-            title: "의의 및 한계",
-            items: [
-              "불완전한 검색을 피하는 대신 내부·외부 지식의 신뢰도를 비교하는 실용적 대응 방식 검증",
-              "성능이 검색 코퍼스의 최신성과 기반 LLM의 내부 지식 품질에도 영향을 받는다는 점 확인",
-            ],
-          },
+            "title": "출처를 유지한 문서 결합",
+            "items": [
+              "외부 문서 E와 내부 문서 I를 하나의 문서 목록으로 결합합니다.",
+              "LLM이 정보의 출처를 구별할 수 있도록 page_content와 함께 source를 저장합니다.",
+              "외부 문서는 source: external, 내부 문서는 source: internal로 표시합니다.",
+              "발표자료의 코드는 외부 문서 목록 뒤에 해당 질문의 내부 문서를 붙여 combine_passages를 구성합니다."
+            ]
+          }
         ],
+        "images": [
+          {
+            "src": "/projects/knowledge-conflicts/slides/combine-call.jpg",
+            "alt": "외부 문서와 내부 문서를 만든 뒤 combine_passage를 호출하는 코드",
+            "caption": "PASSAGE GENERATION & COMBINATION · 발표자료 p.11",
+            "className": "overview-wide",
+            "width": 565,
+            "height": 184
+          },
+          {
+            "src": "/projects/knowledge-conflicts/slides/combine-function.jpg",
+            "alt": "page_content와 internal 또는 external source를 유지하는 combine_passage 함수",
+            "caption": "SOURCE-AWARE COMBINATION",
+            "className": "overview-wide",
+            "width": 912,
+            "height": 260
+          }
+        ]
       },
+      {
+        "title": "2-7. 구축 방식 — Consolidation",
+        "blocks": [
+          {
+            "title": "동일한 답변을 지지하는 문서끼리 그룹화",
+            "items": [
+              "결합된 문서 중 같은 답을 주장하는 문서를 묶고, 질문과 무관한 문서는 별도로 분리합니다.",
+              "발표 예시의 질문은 ‘Alvin and the Chipmunks에서 David를 연기한 사람은 누구인가?’입니다.",
+              "외부 검색은 Jason Lee를, 모델의 내부 문서는 Zachary Levi를 제시해 지식 충돌이 발생합니다.",
+              "Group A는 Jason Lee를 지지하는 외부 문서, Group B는 Zachary Levi를 주장하는 내부·외부 문서, Group C는 질문과 무관한 문서로 정리합니다."
+            ]
+          }
+        ],
+        "images": [
+          {
+            "src": "/projects/knowledge-conflicts/slides/consolidation.jpg",
+            "alt": "Jason Lee와 Zachary Levi를 지지하는 문서 및 무관한 문서를 세 그룹으로 분리한 예시",
+            "caption": "KNOWLEDGE CONSOLIDATION · 발표자료 p.13",
+            "className": "overview-wide",
+            "width": 883,
+            "height": 541
+          }
+        ]
+      },
+      {
+        "title": "2-8. 구축 방식 — Finalize Answer",
+        "blocks": [
+          {
+            "title": "LLM-as-a-judge와 신뢰도 기반 선택",
+            "items": [
+              "LLM-as-a-judge를 사용해 그룹별 답변 후보와 Confidence를 평가합니다.",
+              "여러 외부 문서가 일관되게 지지하는 Jason Lee 후보는 예시에서 High (95%)로 평가됩니다.",
+              "다른 인물·배역과 혼동되고 외부 출처와 충돌하는 Zachary Levi 후보는 Low (25%)로 평가됩니다.",
+              "더 일관되고 신뢰할 수 있는 근거를 지닌 후보를 최종 답변으로 선택합니다. 그림의 Confidence는 이 예시에서 LLM이 부여한 값이며 전체 실험의 정확도는 아닙니다."
+            ]
+          }
+        ],
+        "images": [
+          {
+            "src": "/projects/knowledge-conflicts/slides/finalize-answer.jpg",
+            "alt": "문서 그룹별 후보에 신뢰도를 부여하고 Jason Lee를 선택하는 예시",
+            "caption": "ANSWER FINALIZATION · 발표자료 p.15",
+            "className": "overview-wide",
+            "width": 901,
+            "height": 556
+          }
+        ]
+      },
+      {
+        "title": "2-9. Experiment — 데이터셋과 비교 조건",
+        "blocks": [
+          {
+            "title": "실험 준비",
+            "items": [
+              "ASTUTE RAG가 Baseline보다 좋은 성능을 보이는지 확인하기 위해 테스트 데이터셋과 Mistral-Nemo (2407), 12B 모델을 구성합니다.",
+              "No RAG, Baseline RAG, Astute RAG를 각 재현 모델 내 동일 설정으로 비교합니다.",
+              "Mistral-Nemo와 함께 Gemini-2.5 Flash에서도 정확도 향상 경향을 확인합니다."
+            ]
+          }
+        ],
+        "tables": [
+          {
+            "title": "평가 데이터셋 · 발표자료 p.16",
+            "columns": [
+              "데이터셋",
+              "질문 특성",
+              "평가 목적"
+            ],
+            "rows": [
+              [
+                "BioASQ",
+                "의학·생명과학 질의응답",
+                "전문 도메인 성능"
+              ],
+              [
+                "NQ",
+                "실제 검색 기반 질문",
+                "일반 오픈도메인 QA"
+              ],
+              [
+                "PopQA",
+                "희소하거나 생소한 지식 중심 질문",
+                "검색 보강의 필요성이 큰 질의"
+              ],
+              [
+                "TriviaQA",
+                "퀴즈형 일반 상식 질문",
+                "다양한 범위의 질의응답 능력"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "2-10. Experiment 1 — Accuracy 측정",
+        "blocks": [
+          {
+            "title": "최종 답변의 정답 여부 판정",
+            "items": [
+              "LLM 응답의 Step 3에서 <ANSWER>와 </ANSWER> 사이에 있는 Final Answer를 추출합니다.",
+              "추출한 답변이 gold_answer의 정답 후보에 포함되는지를 기준으로 정답 여부를 판정하고 Accuracy를 계산합니다.",
+              "설명 문장 전체가 아니라 최종 답변을 평가 대상으로 삼습니다."
+            ]
+          },
+          {
+            "title": "발표자료의 판정 예시",
+            "items": [
+              "질문: ‘Who was the director of His Way?’",
+              "Step 1에서 Douglas McGrath를 지지하는 문서를 묶고, 다른 동명 영화에 관한 문서는 무관한 정보로 분리합니다.",
+              "Step 2에서 문서들의 일치 여부를 근거로 답변 후보의 신뢰도를 평가합니다.",
+              "Step 3의 최종 답변 Douglas McGrath를 gold_answer의 후보 ‘Douglas McGrath’, ‘Douglas Geoffrey McGrath’와 비교합니다."
+            ]
+          }
+        ],
+        "images": [
+          {
+            "src": "/projects/knowledge-conflicts/slides/accuracy-example.jpg",
+            "alt": "His Way 감독 질문의 통합, 신뢰도 평가, ANSWER 태그와 gold_answer를 보여주는 정확도 판정 예시",
+            "caption": "ACCURACY EVALUATION EXAMPLE · 발표자료 p.17",
+            "className": "overview-wide",
+            "width": 918,
+            "height": 316
+          }
+        ]
+      },
+      {
+        "title": "2-11. Experiment 1 — 논문과 재현 결과",
+        "layout": "reference",
+        "paragraphs": [
+          "발표자료 p.18–20의 정확도 표를 옮겼습니다. 모든 값은 Accuracy(%)이며, 논문 수치와 이번 재현 실험 수치를 구분했습니다."
+        ],
+        "blocks": [
+          {
+            "title": "비교 목적",
+            "items": [
+              "불완전한 검색에 노이즈가 섞여 지식 충돌이 생겨도, 내부·외부 근거를 정리하고 선택하는 Astute RAG가 Baseline보다 평균적으로 안정적인 정확도를 보이는지 확인합니다."
+            ]
+          },
+          {
+            "title": "재현 결과 해석",
+            "items": [
+              "Mistral-Nemo (2407), 12B의 Overall은 Baseline 59.8%에서 Astute RAG 66.4%로 6.6%p 높아졌습니다.",
+              "Gemini-2.5 Flash의 Overall은 Baseline 61.0%에서 Astute RAG 70.2%로 9.2%p 높아졌습니다.",
+              "Gemini 논문 표의 모델은 1.5 Pro (002), 재현 모델은 2.5 Flash입니다. 동일 모델의 절대 수치를 재현한 비교가 아니라, 각 모델 안에서 Baseline 대비 개선 경향을 비교한 결과입니다."
+            ]
+          }
+        ],
+        "tables": [
+          {
+            "title": "논문 — Claude 3.5 Sonnet (20240620)",
+            "columns": [
+              "방법",
+              "NQ",
+              "TriviaQA",
+              "BioASQ",
+              "PopQA",
+              "Overall"
+            ],
+            "rows": [
+              [
+                "No RAG",
+                "47.1",
+                "82.0",
+                "50.4",
+                "29.8",
+                "54.5"
+              ],
+              [
+                "Baseline RAG",
+                "44.4",
+                "76.7",
+                "58.0",
+                "36.0",
+                "55.5"
+              ],
+              [
+                "Astute RAG",
+                "52.2",
+                "84.1",
+                "60.1",
+                "44.4",
+                "61.7"
+              ]
+            ],
+            "note": "발표자료 p.18의 논문 인용 결과."
+          },
+          {
+            "title": "논문 — Mistral-Large (2407), 128B",
+            "columns": [
+              "방법",
+              "NQ",
+              "TriviaQA",
+              "BioASQ",
+              "PopQA",
+              "Overall"
+            ],
+            "rows": [
+              [
+                "No RAG",
+                "46.8",
+                "79.5",
+                "43.7",
+                "24.7",
+                "51.1"
+              ],
+              [
+                "Baseline RAG",
+                "43.1",
+                "77.4",
+                "55.9",
+                "36.0",
+                "54.7"
+              ],
+              [
+                "Astute RAG",
+                "50.2",
+                "82.7",
+                "58.4",
+                "42.1",
+                "59.9"
+              ]
+            ],
+            "note": "발표자료 p.18의 논문 인용 결과."
+          },
+          {
+            "title": "논문 — Mistral-Nemo (2407), 12B",
+            "columns": [
+              "방법",
+              "NQ",
+              "TriviaQA",
+              "BioASQ",
+              "PopQA",
+              "Overall"
+            ],
+            "rows": [
+              [
+                "No RAG",
+                "29.8",
+                "67.8",
+                "34.3",
+                "23.0",
+                "40.2"
+              ],
+              [
+                "Baseline RAG",
+                "39.3",
+                "66.8",
+                "49.0",
+                "32.6",
+                "48.3"
+              ],
+              [
+                "Astute RAG",
+                "42.7",
+                "73.9",
+                "49.3",
+                "32.6",
+                "51.3"
+              ]
+            ],
+            "note": "발표자료 p.18–19."
+          },
+          {
+            "title": "재현 — Mistral-Nemo (2407), 12B",
+            "columns": [
+              "방법",
+              "NQ",
+              "TriviaQA",
+              "BioASQ",
+              "PopQA",
+              "Overall"
+            ],
+            "rows": [
+              [
+                "No RAG",
+                "31.2",
+                "72.8",
+                "47.9",
+                "28.5",
+                "45.1"
+              ],
+              [
+                "Baseline RAG",
+                "41.9",
+                "85.8",
+                "56.7",
+                "54.6",
+                "59.8"
+              ],
+              [
+                "Astute RAG",
+                "49.6",
+                "91.6",
+                "61.7",
+                "62.7",
+                "66.4"
+              ]
+            ],
+            "note": "발표자료 p.19. Baseline 대비 Overall +6.6%p."
+          },
+          {
+            "title": "논문 — Gemini 1.5 Pro (002)",
+            "columns": [
+              "방법",
+              "NQ",
+              "TriviaQA",
+              "BioASQ",
+              "PopQA",
+              "Overall"
+            ],
+            "rows": [
+              [
+                "No RAG",
+                "44.8",
+                "80.2",
+                "45.8",
+                "25.3",
+                "51.3"
+              ],
+              [
+                "Baseline RAG",
+                "42.7",
+                "76.0",
+                "55.2",
+                "33.7",
+                "53.7"
+              ],
+              [
+                "Astute RAG",
+                "50.2",
+                "81.6",
+                "58.0",
+                "40.5",
+                "59.2"
+              ]
+            ],
+            "note": "발표자료 p.18, 20. 아래 재현 실험과는 모델 버전이 다릅니다."
+          },
+          {
+            "title": "재현 — Gemini-2.5 Flash",
+            "columns": [
+              "방법",
+              "NQ",
+              "TriviaQA",
+              "BioASQ",
+              "PopQA",
+              "Overall"
+            ],
+            "rows": [
+              [
+                "No RAG",
+                "37.3",
+                "88.9",
+                "57.9",
+                "40.8",
+                "56.2"
+              ],
+              [
+                "Baseline RAG",
+                "40.4",
+                "86.6",
+                "60.5",
+                "56.5",
+                "61.0"
+              ],
+              [
+                "Astute RAG",
+                "50.8",
+                "95.0",
+                "69.3",
+                "65.8",
+                "70.2"
+              ]
+            ],
+            "note": "발표자료 p.20. Baseline 대비 Overall +9.2%p."
+          }
+        ]
+      },
+      {
+        "title": "2-12. Experiment 1 — 결과 차이 해석",
+        "blocks": [
+          {
+            "title": "논문보다 높은 재현 정확도의 해석",
+            "items": [
+              "발표자료는 검색 대상 코퍼스가 계속 업데이트된다는 점을 정확도 차이의 요인으로 설명합니다.",
+              "예시로 웹 문서의 변경 이력을 제시해 논문 당시와 재현 시점의 검색 정보가 같지 않을 수 있음을 보여줍니다.",
+              "이는 발표자료에서 제시한 해석이며, 코퍼스 변화만을 분리해 효과를 측정한 실험 결과로 단정하지 않습니다."
+            ]
+          }
+        ],
+        "images": [
+          {
+            "src": "/projects/knowledge-conflicts/slides/corpus-updates.jpg",
+            "alt": "발표자료에서 검색 코퍼스의 지속적인 업데이트 사례로 제시한 문서 변경 이력",
+            "caption": "RETRIEVAL CORPUS UPDATES · 발표자료 p.21",
+            "className": "overview-wide",
+            "width": 909,
+            "height": 415
+          }
+        ]
+      },
+      {
+        "title": "2-13. Experiment 2 — 검색 품질별 강건성",
+        "blocks": [
+          {
+            "title": "평균 Accuracy를 넘어선 평가",
+            "items": [
+              "첫 번째 실험의 평균 정확도 우위만으로는 검색 품질이 나빠져도 우위가 유지되는지 알 수 없습니다.",
+              "Retrieval Precision은 검색한 문서 중 Gold Answer를 포함한 정답 근거 문서의 비율로 정의합니다.",
+              "검색 품질이 0%부터 100%까지 달라질 때 각 방법의 Accuracy 변화 곡선을 비교합니다."
+            ]
+          },
+          {
+            "title": "테스트 데이터 그룹화",
+            "items": [
+              "각 질문의 검색 결과에서 Retrieval Precision을 측정합니다.",
+              "질문들을 0~10%, 10~20%, …, 90~100%와 같은 검색 정밀도 구간으로 묶습니다.",
+              "각 그룹의 Accuracy를 계산해 No RAG·Baseline RAG·Astute RAG의 검색 품질별 성능을 비교합니다."
+            ]
+          },
+          {
+            "title": "논문과 재현 결과의 경향",
+            "items": [
+              "검색 정밀도가 낮은 구간에서도 Astute RAG는 Baseline보다 성능 하락이 완만한 경향을 보입니다.",
+              "이는 검색 결과만 따르지 않고 모델 내부 문서와 검색 문서를 함께 평가해 선택하는 접근의 강건성을 보여줍니다."
+            ]
+          },
+          {
+            "title": "80~90% 구간의 예외",
+            "items": [
+              "재현 그래프의 80~90% 구간에서는 Astute RAG의 Accuracy가 Baseline보다 소폭 낮은 경우가 관찰됩니다.",
+              "발표자료는 외부 문서만 사용하는 Baseline과 달리 Astute RAG가 모델 자체의 내부 지식 품질에도 영향을 받기 때문이라고 해석합니다.",
+              "따라서 모든 구간에서 반드시 우월하다는 결론이 아니라, 전반적인 강건성 향상과 함께 예외를 보고합니다."
+            ]
+          }
+        ],
+        "images": [
+          {
+            "src": "/projects/knowledge-conflicts/slides/precision-example.jpg",
+            "alt": "Gold Answer가 검색 문서에 포함되는지 확인하는 Retrieval Precision 예시",
+            "caption": "RETRIEVAL PRECISION · 발표자료 p.22",
+            "className": "overview-wide",
+            "width": 798,
+            "height": 192
+          },
+          {
+            "src": "/projects/knowledge-conflicts/slides/precision-groups.png",
+            "alt": "질문을 검색 정밀도 구간별로 나눈 뒤 그룹별 정확도를 측정하는 발표자료 도식",
+            "caption": "SPLIT TEST DATASET · 발표자료 p.23",
+            "className": "overview-wide",
+            "width": 1334,
+            "height": 750
+          },
+          {
+            "src": "/projects/knowledge-conflicts/slides/robustness-paper.jpg",
+            "alt": "논문에서 인용한 Retrieval Precision에 따른 방법별 정확도 곡선",
+            "caption": "논문 — ROBUSTNESS · 발표자료 p.24",
+            "className": "overview-wide",
+            "width": 891,
+            "height": 618
+          },
+          {
+            "src": "/projects/knowledge-conflicts/slides/robustness-reproduction.jpg",
+            "alt": "재현 실험의 No RAG, RAG, Astute RAG 정확도 곡선",
+            "caption": "재현 — ROBUSTNESS · 발표자료 p.24–25",
+            "className": "overview-wide",
+            "width": 1185,
+            "height": 735
+          }
+        ]
+      },
+      {
+        "title": "2-14. Project Conclusion",
+        "blocks": [
+          {
+            "title": "두 실험으로 확인한 결과",
+            "items": [
+              "Accuracy 비교에서 Mistral-Nemo와 Gemini-2.5 Flash 모두 Astute RAG가 각 모델의 Baseline보다 높은 Overall을 보였습니다.",
+              "Retrieval Precision별 비교에서는 검색 품질이 낮아져도 내부·외부 지식을 함께 활용해 더 강건한 성능을 보이는 전반적 경향을 재현했습니다."
+            ]
+          },
+          {
+            "title": "의의와 한계",
+            "items": [
+              "불완전한 검색을 피하는 대신, 서로 다른 출처의 근거를 대조·통합하고 신뢰도에 따라 답을 선택하는 접근을 구현했습니다.",
+              "검색 코퍼스의 변화와 모델 내부 지식의 품질이 결과에 영향을 줄 수 있으며, 80~90% 구간의 예외도 함께 확인했습니다."
+            ]
+          }
+        ]
+      }
     ],
   },
   {

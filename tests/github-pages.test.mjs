@@ -228,6 +228,67 @@ test("README background assets remain without duplicate result and demo images",
   assert.match(css, /\.project-section--reference \.project-section-images \.overview-wide img\{height:auto;max-height:none\}/);
 });
 
+test("knowledge follows the presentation order and preserves the paper and presentation links", async () => {
+  const html = await readFile(join(output, "project/knowledge-conflicts/index.html"), "utf8");
+  assert.deepEqual([...html.matchAll(/<h2>([^<]+)<\/h2>/g)].map((match) => match[1]), [
+    "2-1. 연구 목표", "2-2. Astute RAG 소개", "2-3. 구축 방식 — 의사코드",
+    "2-4. 구축 방식 — Retrieval Augment", "2-5. 구축 방식 — Internal Passages",
+    "2-6. 구축 방식 — Combine Passages", "2-7. 구축 방식 — Consolidation",
+    "2-8. 구축 방식 — Finalize Answer", "2-9. Experiment — 데이터셋과 비교 조건",
+    "2-10. Experiment 1 — Accuracy 측정", "2-11. Experiment 1 — 논문과 재현 결과",
+    "2-12. Experiment 1 — 결과 차이 해석", "2-13. Experiment 2 — 검색 품질별 강건성",
+    "2-14. Project Conclusion",
+  ]);
+  assert.match(html, /class="sheet-paper" href="https:\/\/arxiv\.org\/abs\/2410\.07176"/);
+  assert.match(html, /class="sheet-presentation" href="https:\/\/docs\.google\.com\/presentation\/d\/1EEn4TS_AIj_fciUa4-jtFux3lafq9xPP_jzAAeani5E\/edit\?usp=sharing"/);
+  assert.ok(html.indexOf('class="sheet-presentation"') < html.indexOf('class="sheet-github"'));
+  for (const detail of ["I don’t know", "source: external", "source: internal", "Jason Lee", "Zachary Levi", "LLM-as-a-judge", "gold_answer", "&lt;ANSWER&gt;", "80~90%", "코퍼스"]) {
+    assert.ok(html.includes(detail), "Missing presentation detail: " + detail);
+  }
+  assert.doesNotMatch(html, /README|sheet-demo/);
+});
+
+test("knowledge separates paper and reproduction results with all per-dataset values", async () => {
+  const html = await readFile(join(output, "project/knowledge-conflicts/index.html"), "utf8");
+  const tables = new Map([...html.matchAll(/<table class="project-table"><caption>([^<]+)<\/caption>([\s\S]*?)<\/table>/g)]
+    .map(([, title, markup]) => [title, [...markup.matchAll(/<tbody>([\s\S]*?)<\/tbody>/g)][0][1]]));
+  assert.equal(tables.size, 7);
+  const expected = [
+    ["논문 — Claude 3.5 Sonnet (20240620)", [["47.1","82.0","50.4","29.8","54.5"],["44.4","76.7","58.0","36.0","55.5"],["52.2","84.1","60.1","44.4","61.7"]]],
+    ["논문 — Mistral-Large (2407), 128B", [["46.8","79.5","43.7","24.7","51.1"],["43.1","77.4","55.9","36.0","54.7"],["50.2","82.7","58.4","42.1","59.9"]]],
+    ["논문 — Mistral-Nemo (2407), 12B", [["29.8","67.8","34.3","23.0","40.2"],["39.3","66.8","49.0","32.6","48.3"],["42.7","73.9","49.3","32.6","51.3"]]],
+    ["재현 — Mistral-Nemo (2407), 12B", [["31.2","72.8","47.9","28.5","45.1"],["41.9","85.8","56.7","54.6","59.8"],["49.6","91.6","61.7","62.7","66.4"]]],
+    ["논문 — Gemini 1.5 Pro (002)", [["44.8","80.2","45.8","25.3","51.3"],["42.7","76.0","55.2","33.7","53.7"],["50.2","81.6","58.0","40.5","59.2"]]],
+    ["재현 — Gemini-2.5 Flash", [["37.3","88.9","57.9","40.8","56.2"],["40.4","86.6","60.5","56.5","61.0"],["50.8","95.0","69.3","65.8","70.2"]]],
+  ];
+  for (const [title, values] of expected) {
+    const body = tables.get(title);
+    assert.ok(body, "Missing table: " + title);
+    const rows = [...body.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(([, row]) => [...row.matchAll(/<td>([^<]+)<\/td>/g)].map((match) => match[1]));
+    assert.deepEqual(rows, values, title);
+    assert.deepEqual([...body.matchAll(/<th scope="row">([^<]+)<\/th>/g)].map((match) => match[1]), ["No RAG", "Baseline RAG", "Astute RAG"]);
+  }
+  assert.match(html, /동일 모델의 절대 수치를 재현한 비교가 아니라/);
+  assert.match(html, /6\.6%p/);
+  assert.match(html, /9\.2%p/);
+});
+
+test("knowledge retains complete source diagrams and prompts without cropping them", async () => {
+  const html = await readFile(join(output, "project/knowledge-conflicts/index.html"), "utf8");
+  const expected = [
+    "knowledge-conflict.jpg", "astute-overview.jpg", "pseudo-code.jpg", "internal-prompt.jpg",
+    "internal-generation.jpg", "combine-call.jpg", "combine-function.jpg", "consolidation.jpg",
+    "finalize-answer.jpg", "accuracy-example.jpg", "corpus-updates.jpg", "precision-example.jpg",
+    "precision-groups.png", "robustness-paper.jpg", "robustness-reproduction.jpg",
+  ];
+  for (const name of expected) {
+    assert.ok(html.includes('src="/projects/knowledge-conflicts/slides/' + name + '"'), name);
+  }
+  const css = await readFile(join(root, "app/globals.css"), "utf8");
+  assert.match(css, /\.modal-02 \.project-section-images \.overview-wide>div,\.modal-02 \.project-section-images \.overview-wide img\{height:auto;max-height:none\}/);
+  assert.match(css, /\.modal-02 \.project-section--reference \.project-table\{min-width:560px\}/);
+});
+
 test("exports all portfolio routes as directly accessible HTML", async () => {
   assert.equal(slugs.length, 3);
   const pages = ["index.html", "main/index.html", "profile/index.html", "project/index.html", "404.html", ...slugs.map((slug) => `project/${slug}/index.html`)];

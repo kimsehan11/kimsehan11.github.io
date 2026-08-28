@@ -826,9 +826,6 @@ export const projects: Project[] = [
       {
         "title": "2-11. Experiment 1 — 논문과 재현 결과",
         "layout": "reference",
-        "paragraphs": [
-          "발표자료 p.18–20의 정확도 표를 옮겼습니다. 모든 값은 Accuracy(%)이며, 논문 수치와 이번 재현 실험 수치를 구분했습니다."
-        ],
         "blocks": [
           {
             "title": "비교 목적",

@@ -246,6 +246,7 @@ test("knowledge follows the presentation order and preserves the paper and prese
     assert.ok(html.includes(detail), "Missing presentation detail: " + detail);
   }
   assert.doesNotMatch(html, /README|sheet-demo/);
+  assert.doesNotMatch(html, /발표자료 p\.18–20의 정확도 표를 옮겼습니다\./);
   const captions = [...html.matchAll(/<(?:figcaption|caption)>([^<]+)<\/(?:figcaption|caption)>/g)].map((match) => match[1]);
   assert.ok(captions.includes("KNOWLEDGE CONSOLIDATION"));
   assert.ok(captions.includes("평가 데이터셋"));

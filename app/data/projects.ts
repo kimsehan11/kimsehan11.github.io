@@ -180,73 +180,7 @@ export const projects: Project[] = [
         ],
       },
       {
-        title: "1-2. 결과",
-        layout: "results",
-        blocks: [
-          {
-            title: "주요 내용 및 성과",
-            items: [
-              "대화형 상담 UX 구현",
-              "개인 맞춤형 서비스 제공",
-              "2D부터 3D까지 가능한 가상 체험 서비스 제공",
-              "최신 K-뷰티 트렌드 반영",
-            ],
-          },
-          {
-            title: "향후 계획 및 개선 방향",
-            items: [
-              "최신 Face Swap 모델 탐색 및 테스트",
-              "오픈소스 이미지 생성 모델 탐색 및 적용",
-              "최신 스타일 자동 업데이트 기능 추가",
-              "기존 추천 알고리즘의 얼굴형 정보에 이목구비와 모발 등 세부 요소 추가 반영",
-            ],
-          },
-        ],
-        images: [
-          {
-            src: "/projects/hairstyle/chat-user-photo-cropped-v2.png",
-            alt: "헤어스타일 상담에 사용된 사용자 사진",
-            caption: "헤어스타일 생성 요청 예시",
-            className: "result-user-photo",
-            group: "conversation",
-          },
-          {
-            src: "/projects/hairstyle/chat-request-upscaled.png",
-            alt: "애즈펌과 레드브라운 스타일을 요청하는 사용자 메시지",
-            className: "result-request",
-            group: "conversation",
-          },
-          {
-            src: "/projects/hairstyle/personalized-recommendation.png",
-            alt: "사용자 요청을 반영한 헤어스타일 결과와 추천 이유를 설명하는 전체 대화",
-            caption: "추천 결과 및 대화 내용",
-            className: "result-recommendation-full",
-            group: "conversation",
-          },
-          {
-            src: "/projects/hairstyle/style-gallery.png",
-            alt: "다양한 헤어스타일 가상 체험 결과 갤러리",
-            caption: "갤러리",
-            className: "result-gallery",
-            group: "showcase",
-          },
-          {
-            src: "/projects/hairstyle/virtual-try-on-female.png",
-            alt: "여성 이미지에 적용된 헤어스타일 가상 체험 결과",
-            caption: "3D 뷰 예시",
-            className: "result-vto-female",
-            group: "showcase",
-          },
-          {
-            src: "/projects/hairstyle/virtual-try-on-male.png",
-            alt: "남성 이미지에 적용된 헤어스타일 가상 체험 결과",
-            className: "result-vto-male",
-            group: "showcase",
-          },
-        ],
-      },
-      {
-        title: "1-3. 시스템 아키텍처",
+        title: "1-2. 시스템 아키텍처",
         blocks: [
           {
             title: "서비스 구성",
@@ -284,7 +218,7 @@ export const projects: Project[] = [
         ],
       },
       {
-        title: "1-4. 핵심 설계",
+        title: "1-3. 핵심 설계",
         blocks: [
           {
             title: "RAG",
@@ -348,7 +282,7 @@ export const projects: Project[] = [
         ],
       },
       {
-        title: "1-5. 모델 선정",
+        title: "1-4. 모델 선정",
         layout: "reference",
         paragraphs: [
           "다양한 VLM, 임베딩, 리랭커 모델을 평가지표 기반으로 비교해 모델과 조합을 선정했습니다. 아래는 프로젝트 README에 명시된 선정 모델과 검색 설정입니다.",
@@ -382,7 +316,7 @@ export const projects: Project[] = [
         ],
       },
       {
-        title: "1-6. 실제 코드 플로우",
+        title: "1-5. 실제 코드 플로우",
         layout: "flow",
         flow: {
           label: "Hairstyle is All You Need 요청 처리 코드 흐름",
@@ -441,7 +375,7 @@ export const projects: Project[] = [
         },
       },
       {
-        title: "1-7. 평가 및 최적화",
+        title: "1-6. 평가 및 최적화",
         layout: "reference",
         paragraphs: [
           "추천과 이미지 생성의 품질을 각각 정량·정성 지표로 평가하고 응답시간을 측정했습니다. 결과 표는 README 보고값이며, P는 자체 정성 평가에서 통과했음을 뜻합니다.",
@@ -506,28 +440,68 @@ export const projects: Project[] = [
         ],
       },
       {
-        title: "1-8. 서비스 시연",
-        layout: "reference",
-        paragraphs: [
-          "README에 공개된 서비스 결과 예시와 시연 영상입니다. 아래 영상 썸네일 또는 페이지 상단의 DEMO VIDEO 버튼을 누르면 YouTube에서 전체 시연을 볼 수 있습니다.",
+        title: "1-7. 결과",
+        layout: "results",
+        blocks: [
+          {
+            title: "주요 내용 및 성과",
+            items: [
+              "대화형 상담 UX 구현",
+              "개인 맞춤형 서비스 제공",
+              "2D부터 3D까지 가능한 가상 체험 서비스 제공",
+              "최신 K-뷰티 트렌드 반영",
+            ],
+          },
+          {
+            title: "향후 계획 및 개선 방향",
+            items: [
+              "최신 Face Swap 모델 탐색 및 테스트",
+              "오픈소스 이미지 생성 모델 탐색 및 적용",
+              "최신 스타일 자동 업데이트 기능 추가",
+              "기존 추천 알고리즘의 얼굴형 정보에 이목구비와 모발 등 세부 요소 추가 반영",
+            ],
+          },
         ],
         images: [
           {
-            src: "/projects/hairstyle/readme/sample.png",
-            alt: "GitHub README에 공개된 Hairstyle is All You Need 서비스 결과 예시",
-            caption: "서비스 결과 예시",
-            className: "overview-wide",
-            width: 4491,
-            height: 2120,
+            src: "/projects/hairstyle/chat-user-photo-cropped-v2.png",
+            alt: "헤어스타일 상담에 사용된 사용자 사진",
+            caption: "헤어스타일 생성 요청 예시",
+            className: "result-user-photo",
+            group: "conversation",
           },
           {
-            src: "/projects/hairstyle/readme/demo_thumbnail.png",
-            alt: "YouTube에서 Hairstyle is All You Need 시연 영상 보기",
-            caption: "시연 영상 — YouTube에서 보기 ↗",
-            className: "overview-wide",
-            href: "https://youtu.be/_GqkF_I5t7A",
-            width: 1836,
-            height: 980,
+            src: "/projects/hairstyle/chat-request-upscaled.png",
+            alt: "애즈펌과 레드브라운 스타일을 요청하는 사용자 메시지",
+            className: "result-request",
+            group: "conversation",
+          },
+          {
+            src: "/projects/hairstyle/personalized-recommendation.png",
+            alt: "사용자 요청을 반영한 헤어스타일 결과와 추천 이유를 설명하는 전체 대화",
+            caption: "추천 결과 및 대화 내용",
+            className: "result-recommendation-full",
+            group: "conversation",
+          },
+          {
+            src: "/projects/hairstyle/style-gallery.png",
+            alt: "다양한 헤어스타일 가상 체험 결과 갤러리",
+            caption: "갤러리",
+            className: "result-gallery",
+            group: "showcase",
+          },
+          {
+            src: "/projects/hairstyle/virtual-try-on-female.png",
+            alt: "여성 이미지에 적용된 헤어스타일 가상 체험 결과",
+            caption: "3D 뷰 예시",
+            className: "result-vto-female",
+            group: "showcase",
+          },
+          {
+            src: "/projects/hairstyle/virtual-try-on-male.png",
+            alt: "남성 이미지에 적용된 헤어스타일 가상 체험 결과",
+            className: "result-vto-male",
+            group: "showcase",
           },
         ],
       },

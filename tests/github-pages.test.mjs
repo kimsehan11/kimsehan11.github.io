@@ -172,10 +172,15 @@ test("hairstyle covers README design details while keeping the code flow and exc
   ]) {
     assert.ok(html.includes(text), "Missing README detail: " + text);
   }
-  assert.match(html, /<h2>1-6\. 실제 코드 플로우<\/h2>/);
+  assert.match(html, /<h2>1-5\. 실제 코드 플로우<\/h2>/);
   assert.match(html, /class="project-code-flow"/);
-  assert.match(html, /<h2>1-7\. 평가 및 최적화<\/h2>/);
-  assert.match(html, /<h2>1-8\. 서비스 시연<\/h2>/);
+  assert.match(html, /<h2>1-6\. 평가 및 최적화<\/h2>/);
+  assert.deepEqual([...html.matchAll(/<h2>([^<]+)<\/h2>/g)].map((match) => match[1]), [
+    "1-1. 프로젝트 개요", "1-2. 시스템 아키텍처", "1-3. 핵심 설계",
+    "1-4. 모델 선정", "1-5. 실제 코드 플로우", "1-6. 평가 및 최적화", "1-7. 결과",
+  ]);
+  assert.equal((html.match(/class="project-section project-section--results"/g) ?? []).length, 1);
+  assert.doesNotMatch(html, /서비스 시연|시연 영상 — YouTube에서 보기/);
   assert.doesNotMatch(html, /<img\b[^>]*src="[^"]*(?:erd|evaluation)[^"]*"|<h[23]>[^<]*ERD/);
 });
 
@@ -210,13 +215,13 @@ test("README tables preserve all reported models, settings and evaluation scores
   assert.match(generation, /<td>60초<\/td>/);
 });
 
-test("README assets include a linked demo thumbnail with intrinsic size and responsive presentation", async () => {
+test("README background assets remain without duplicate result and demo images", async () => {
   const html = await readFile(join(output, "project/hairstyle-is-all-you-need/index.html"), "utf8");
-  for (const name of ["Mckinsey.png", "popularity.png", "sample.png", "demo_thumbnail.png"]) {
+  for (const name of ["Mckinsey.png", "popularity.png"]) {
     assert.ok(html.includes('src="/projects/hairstyle/readme/' + name + '"'));
   }
-  assert.match(html, /<a href="https:\/\/youtu\.be\/_GqkF_I5t7A" target="_blank" rel="noreferrer"><img[^>]*src="\/projects\/hairstyle\/readme\/demo_thumbnail\.png"[^>]*width="1836"[^>]*height="980"[^>]*loading="lazy"/);
-  assert.match(html, /<img[^>]*src="\/projects\/hairstyle\/readme\/sample\.png"[^>]*width="4491"[^>]*height="2120"[^>]*loading="lazy"/);
+  assert.doesNotMatch(html, /<img[^>]*src="\/projects\/hairstyle\/readme\/(?:sample|demo_thumbnail)\.png"/);
+  assert.equal((html.match(/<a[^>]*href="https:\/\/youtu\.be\/_GqkF_I5t7A"/g) ?? []).length, 1);
   const css = await readFile(join(root, "app/globals.css"), "utf8");
   assert.match(css, /\.project-table\{width:100%;table-layout:fixed/);
   assert.match(css, /\.project-table-wrap\{max-width:100%;overflow-x:auto\}/);

@@ -9,6 +9,16 @@ export type ProjectSectionImage = {
   caption?: string;
   className?: string;
   group?: "conversation" | "showcase";
+  href?: string;
+  width?: number;
+  height?: number;
+};
+
+export type ProjectSectionTable = {
+  title: string;
+  columns: string[];
+  rows: string[][];
+  note?: string;
 };
 
 export type ProjectCodeFlowStep = {
@@ -27,11 +37,12 @@ export type ProjectCodeFlow = {
 
 export type ProjectSection = {
   title: string;
-  layout?: "standard" | "results" | "flow";
+  layout?: "standard" | "results" | "flow" | "reference";
   paragraphs?: string[];
   bullets?: string[];
   blocks?: ProjectSectionBlock[];
   images?: ProjectSectionImage[];
+  tables?: ProjectSectionTable[];
   flow?: ProjectCodeFlow;
 };
 
@@ -47,6 +58,7 @@ export type Project = {
   stack: string[];
   github: string;
   paper?: { label: string; href: string };
+  demo?: { label: string; href: string };
   presentation?: { label: string; href: string };
   sections?: ProjectSection[];
 };
@@ -65,32 +77,96 @@ export const projects: Project[] = [
       "이미지 분석 결과와 사용자 자연어 요구를 결합한 멀티모달 추천 설계",
       "Context Precision 0.94, MRR 0.97, NDCG 0.94 기반 검색 성능 검증",
     ],
-    stack: ["Python", "Django", "FastAPI", "LangChain", "Transformers", "FAISS", "MySQL", "Docker", "AWS"],
+    stack: ["Python", "JavaScript", "Django", "FastAPI", "LangChain", "Transformers", "HTML5", "CSS3", "FAISS", "MySQL", "Ubuntu", "Docker", "Docker Compose", "RunPod", "AWS", "Git"],
     github: "https://github.com/kimsehan11/hairstyle-is-all-you-need",
+    demo: {
+      label: "DEMO VIDEO",
+      href: "https://youtu.be/_GqkF_I5t7A",
+    },
     sections: [
       {
         title: "1-1. 프로젝트 개요",
         blocks: [
           {
-            title: "배경 및 문제점",
+            title: "뷰티 산업의 변화",
             items: [
-              "기존 퍼스널 컨설팅: 높은 비용, 긴 시간, 오프라인 방문의 비효율성",
-              "VTO 서비스 확산: 온라인 가상 체험으로 편의성 개선",
-              "현재 헤어스타일 VTO 서비스의 한계 — 버튼식의 단순 선택 방식과 제한된 옵션",
-              "현재 헤어스타일 VTO 서비스의 한계 — 사용자의 복잡한 요구사항 이해 불가",
-              "현재 헤어스타일 VTO 서비스의 한계 — 면대면 퍼스널 컨설팅을 대체할 개인 맞춤형 상담 부재",
+              "개인 맞춤형 서비스에 대한 높은 수요 — README 인용 자료는 개인화 서비스 기대 71%, 기대 미충족 시 부정적 인식 76%를 제시",
+              "퍼스널 컬러·헤어 컨설팅 등 개인별 특성을 고려한 맞춤형 뷰티 상담 서비스의 인기",
             ],
           },
           {
-            title: "프로젝트 목표",
+            title: "기존 오프라인 서비스의 한계",
             items: [
-              "LLM 기반 지능형 컨설팅 + VTO 결합 멀티모달 챗봇 개발",
-              "복잡한 질의 이해 및 개인의 취향과 기호를 반영한 정밀 추천",
-              "가상 스타일 체험이 가능한 통합 솔루션 제공",
+              "컨설팅당 수만원~수십만원의 높은 비용과 1시간 이상의 긴 소요 시간",
+              "오프라인 방문에 따른 시간과 장소의 제약",
+              "VTO(Virtual Try-On) 기술의 부상 — 온라인 가상 체험이 의류·메이크업에서 헤어스타일까지 확대",
+            ],
+          },
+          {
+            title: "현재 헤어스타일 온라인 서비스의 문제점",
+            items: [
+              "버튼식의 단순 선택 UI와 제한된 옵션으로 사용자의 구체적인 취향 파악이 어려움",
+              "면대면 퍼스널 컨설팅을 대체할 개인 맞춤형 대화 인터페이스의 부재",
+              "고퀄리티 헤어스타일 가상 체험을 제공하는 서비스의 부족",
+            ],
+          },
+          {
+            title: "프로젝트의 필요성",
+            items: [
+              "비정형 사용자 질의 처리 — “가벼우면서도 러블리하고 너무 짧지는 않고, 가을 느낌이 물씬 나는 헤어스타일이 뭐가 있을까?”",
+              "대화 속 다양하고 복잡한 표현에서 핵심 취향과 조건을 추출할 필요",
+              "텍스트 질의와 얼굴 이미지를 함께 분석해 종합적인 맞춤 상담과 가상 체험 제공",
+            ],
+          },
+          {
+            title: "솔루션: 이미지·언어 멀티모달 AI 챗봇",
+            items: [
+              "LLM 기반 지능형 컨설팅과 VTO를 결합한 멀티모달 챗봇 개발",
+              "미용실에서 스타일링 가능한 다양한 헤어스타일·컬러를 이해하고 자연스러운 대화로 취향 파악",
+              "얼굴 이미지 분석을 지원하는 정밀 추천과 고퀄리티 VTO를 하나의 서비스로 연결",
+            ],
+          },
+          {
+            title: "프로젝트 목표 — 대화형 AI 상담",
+            items: [
+              "자연어 기반 취향 분석: 사용자의 비정형적이고 복잡한 요구사항 이해",
+              "맞춤형 스타일 제안: 개인의 취향과 기호를 반영한 구체적인 헤어스타일 추천",
+              "직관적인 인터페이스: 복잡한 메뉴 없이 채팅만으로 상담 진행",
+            ],
+          },
+          {
+            title: "프로젝트 목표 — 생성형 AI 가상 체험",
+            items: [
+              "자연어로 표현된 복잡한 합성 요청을 이해하고 요청한 헤어스타일을 사용자 얼굴에 적용",
+              "고퀄리티 이미지 생성과 3차원 생성 기술을 통합해 입체적인 스타일 체험 제공",
+            ],
+          },
+          {
+            title: "프로젝트 목표 — 최신 트렌드 정보",
+            items: [
+              "웹 서치 도구를 연동해 최신 헤어스타일 트렌드 검색",
+              "계절별·연령별 정보와 현재 유행하는 스타일을 반영한 상담",
+              "변화하는 뷰티 트렌드에 대응할 수 있도록 지속적인 정보 업데이트 지향",
             ],
           },
         ],
         images: [
+          {
+            src: "/projects/hairstyle/readme/Mckinsey.png",
+            alt: "README에서 인용한 개인화 서비스 기대와 소비자 반응 자료",
+            caption: "개인 맞춤형 서비스 수요",
+            className: "overview-wide",
+            width: 607,
+            height: 412,
+          },
+          {
+            src: "/projects/hairstyle/readme/popularity.png",
+            alt: "맞춤형 뷰티 컨설팅 서비스 사례를 소개한 README 기사 자료",
+            caption: "퍼스널 컬러·헤어 컨설팅 서비스",
+            className: "overview-wide",
+            width: 623,
+            height: 438,
+          },
           {
             src: "/projects/hairstyle/vto-market-overview.png",
             alt: "가상 메이크업 시장 성장 전망과 기존 AI 가상 체험 서비스 사례를 합친 자료",
@@ -190,24 +266,48 @@ export const projects: Project[] = [
             className: "overview-wide",
           },
         ],
+        tables: [
+          {
+            title: "기술 스택",
+            columns: ["카테고리", "기술"],
+            rows: [
+              ["언어", "Python · JavaScript"],
+              ["프레임워크 / 라이브러리", "LangChain · Transformers · Django · FastAPI"],
+              ["프론트엔드", "HTML5 · CSS3"],
+              ["데이터베이스", "MySQL"],
+              ["벡터 데이터베이스", "FAISS"],
+              ["배포 / 인프라", "Ubuntu · Docker · Docker Compose · RunPod · AWS"],
+              ["협업", "Git"],
+            ],
+            note: "README 기술 스택과 시스템 구축 설명 기준. AWS 구성에는 EC2·RDS·S3가 포함됩니다.",
+          },
+        ],
       },
       {
         title: "1-4. 핵심 설계",
         blocks: [
           {
-            title: "RAG와 에이전트",
+            title: "RAG",
             items: [
               "헤어스타일·뷰티 블로그 콘텐츠를 수집·전처리해 FAISS 벡터스토어 구축",
               "임베딩 모델과 리랭커를 평가해 검색 조합을 선정하고 Advanced RAG 적용",
-              "추천·이미지 생성·웹 검색 도구를 관리하는 멀티 툴 에이전트 설계",
-              "세션별 대화 컨텍스트와 이전 추천 결과를 활용하는 QA 캐시 시스템 구현",
+            ],
+          },
+          {
+            title: "에이전트 구축",
+            items: [
+              "추천·이미지 생성·웹 검색 등 여러 기능을 효율적으로 관리하는 에이전트 구조 설계",
+              "성능 평가를 통한 멀티모달 에이전트 모델 선정",
+              "다양한 상담 상황에 대응할 수 있는 프롬프트 설계 및 최적화",
+              "헤어스타일 추천, 이미지 생성, 웹 검색 도구별 알고리즘 설계 및 개발",
             ],
           },
           {
             title: "헤어스타일 추천 알고리즘",
             items: [
-              "화이트밸런스로 조명 영향을 완화한 뒤 성별·얼굴형·피부색 분석",
-              "퍼스널 컬러를 분류하고 벡터 유사도 기반 자체 추천 점수 계산",
+              "화이트밸런스로 원본 이미지의 조명 영향을 완화",
+              "이미지 분석으로 성별·얼굴형·피부색을 추출하고 퍼스널 컬러 분류 알고리즘 적용",
+              "벡터 유사도 기반 자체 추천 시스템을 설계하고 추천 점수 계산",
               "사용자 요구사항과 얼굴 분석 정보의 균형을 위한 가중치 기반 추천",
               "Advanced RAG로 추천 스타일과 관련된 근거 문서를 검색해 답변 생성",
             ],
@@ -219,6 +319,16 @@ export const projects: Project[] = [
               "얼굴 영역 자동 크롭과 초해상화로 입력 이미지 품질 개선",
               "Face Swap으로 원본 얼굴 유사도를 보존하고 이미지 편집 모델로 스타일 적용",
               "Gaussian Splatting 기반 3D 생성·렌더링을 연결해 입체 체험으로 확장",
+            ],
+          },
+          {
+            title: "상세 설계",
+            items: [
+              "상세 데이터 구축: 성별·얼굴형·기장·퍼스널 컬러·계절·헤어스타일·헤어 컬러별로 세분화된 데이터 구성",
+              "QA 캐시 시스템: 이전 추천 결과를 벡터스토어에 저장하고 유사 질의에서 활용해 빠른 응답 제공",
+              "기장 인지 알고리즘: 기장 요청에 맞는 추천·합성을 위한 알고리즘과 프롬프트 설계",
+              "가중치 기반 추천: 사용자 요구사항과 얼굴 분석 정보의 균형을 맞추는 score 기반 가중치 설계",
+              "응답 히스토리: 세션별 대화 컨텍스트를 유지해 이전 대화와 연결되는 상담 지원",
             ],
           },
         ],
@@ -239,30 +349,35 @@ export const projects: Project[] = [
       },
       {
         title: "1-5. 모델 선정",
-        blocks: [
+        layout: "reference",
+        paragraphs: [
+          "다양한 VLM, 임베딩, 리랭커 모델을 평가지표 기반으로 비교해 모델과 조합을 선정했습니다. 아래는 프로젝트 README에 명시된 선정 모델과 검색 설정입니다.",
+        ],
+        tables: [
           {
-            title: "RAG",
-            items: [
-              "임베딩: dragonkue/snowflake-arctic-embed-l-v2.0-ko",
-              "리랭커: Dongjin-kr/ko-reranker",
-              "검색 설정: Chunk size 200 · Overlap 100 · Top K 2",
+            title: "RAG 모델 및 검색 설정",
+            columns: ["항목", "선정 값", "역할"],
+            rows: [
+              ["임베딩 모델", "dragonkue/snowflake-arctic-embed-l-v2.0-ko", "검색용 문서·질의 임베딩"],
+              ["리랭커", "Dongjin-kr/ko-reranker", "검색 후보 문서 재정렬"],
+              ["Chunk size", "200", "문서 분할 크기"],
+              ["Overlap", "100", "청크 사이 중복 범위"],
+              ["Top K", "2", "상위 검색 문서 수 설정"],
             ],
           },
           {
-            title: "에이전트와 분석 모델",
-            items: [
-              "ChatGPT 기반 의도 파악·도구 호출·자연어 생성·대화 관리",
-              "IdentiFace 기반 성별·얼굴형 추출",
-              "SkinToneClassifier 기반 피부색 분석",
+            title: "에이전트·얼굴 분석·이미지 합성 모델",
+            columns: ["분야", "모델", "역할"],
+            rows: [
+              ["에이전트", "ChatGPT (gpt-5.2-chat-latest)", "의도 파악 · Tool 호출 · 자연어 생성 · 대화 관리"],
+              ["성별·얼굴형 분석", "IdentiFace", "이미지 기반 성별과 얼굴형 추출"],
+              ["피부색 분석", "SkinToneClassifier", "이미지 기반 피부색 추출"],
+              ["초해상화", "SAFMN", "원본 해상도로부터 고해상도 이미지 생성"],
+              ["이미지 편집", "gpt-image-1", "이미지 편집 API를 통한 헤어스타일 적용"],
+              ["얼굴 보존", "FaceSwap", "얼굴 재생성 문제를 완화하고 원본 얼굴 유지"],
+              ["3D 생성", "Face Lift", "Gaussian Splatting 기반 3차원 생성"],
             ],
-          },
-          {
-            title: "이미지 합성",
-            items: [
-              "SAFMN 기반 초해상화",
-              "이미지 편집 모델과 FaceSwap을 결합해 스타일 적용과 얼굴 보존",
-              "Face Lift의 Gaussian Splatting을 활용한 3차원 생성",
-            ],
+            note: "README의 선정 모델 기준. 이미지 편집 모델명은 실제 코드의 gpt-image-1 표기를 사용했습니다.",
           },
         ],
       },
@@ -327,44 +442,92 @@ export const projects: Project[] = [
       },
       {
         title: "1-7. 평가 및 최적화",
+        layout: "reference",
+        paragraphs: [
+          "추천과 이미지 생성의 품질을 각각 정량·정성 지표로 평가하고 응답시간을 측정했습니다. 결과 표는 README 보고값이며, P는 자체 정성 평가에서 통과했음을 뜻합니다.",
+        ],
         blocks: [
           {
-            title: "추천·생성 성능",
+            title: "평가 데이터셋 구축",
             items: [
-              "Retrieval: Context Recall 0.75 · Context Precision 0.94 · MRR 0.97 · NDCG 0.94",
-              "Generation: Faithfulness 0.91, 문장 구사력·질의 부합성·할루시네이션 자체평가 통과",
-              "추천 응답시간 약 20초",
+              "Corpus 추출: VectorStore에서 전체 뷰티 도메인 문서를 추출하고 메타데이터 타입별로 그룹화",
+              "Retrieval Ground Truth 설정: Corpus에서 샘플링한 원본 문서를 검색 정답으로 지정",
+              "Query 생성: GPT-4o를 활용해 문서별 검색 질의를 자동 생성",
+              "Generation Ground Truth 생성: LLM으로 해당 문서에 근거한 정답 답변 생성",
             ],
           },
           {
-            title: "이미지 생성 성능",
+            title: "평가 지표 선정",
             items: [
-              "이미지 품질 CLIP-IQA 0.82",
-              "원본 얼굴 유사도 ArcFace 0.80",
-              "질의 부합성과 할루시네이션 자체평가 통과, 생성 응답시간 약 60초",
+              "에이전트 성능 평가를 위한 자체 정성 평가지표 수립",
+              "Retrieval: Context Recall · Context Precision · MRR · NDCG",
+              "Generation: Faithfulness · Answer Relevancy 선정 및 자체 정성 평가",
+              "이미지 생성: CLIP-IQA로 이미지 품질, ArcFace로 원본 얼굴 유사도 평가",
+              "문장 구사력·질의 부합성·할루시네이션 자체평가와 응답시간 측정",
             ],
           },
           {
-            title: "평가 데이터셋과 최적화",
+            title: "최적화",
             items: [
-              "VectorStore 문서를 메타데이터별로 그룹화하고 원문을 Retrieval Ground Truth로 설정",
-              "LLM으로 문서별 검색 질의와 Generation Ground Truth를 자동 생성",
-              "Chunk size·Overlap·Top K 조합과 임베딩·리랭커·에이전트 모델을 비교 평가",
+              "Retrieval: Chunk size·Overlap·Top K 조합별 성능 비교 및 최적 조합 선정",
+              "Embedding: 임베딩 모델별 Retrieval 성능 비교와 리랭커 평가를 통한 검색 조합 선정",
+              "에이전트: Generation 평가를 통한 모델 성능 비교 및 최적 모델 선정",
             ],
           },
         ],
-        images: [
+        tables: [
           {
-            src: "/projects/hairstyle/readme/recommendation_evaluation.png",
-            alt: "추천 시스템의 Retrieval 및 Generation 평가 결과",
-            caption: "RECOMMENDATION EVALUATION",
-            className: "overview-wide evaluation-wide",
+            title: "Recommendation Evaluation",
+            columns: ["평가 항목", "평가 종류", "평가지표", "평가 결과"],
+            rows: [
+              ["Retrieval", "정량", "Context Recall", "0.75"],
+              ["Retrieval", "정량", "Context Precision", "0.94"],
+              ["Retrieval", "정량", "MRR", "0.97"],
+              ["Retrieval", "정량", "NDCG", "0.94"],
+              ["Generation", "정량", "Faithfulness", "0.91"],
+              ["문장 구사력", "정성", "자체평가", "P"],
+              ["질의 부합성", "정성", "자체평가", "P"],
+              ["할루시네이션", "정성", "자체평가", "P"],
+              ["응답시간", "정량", "—", "20초"],
+            ],
+            note: "Answer Relevancy는 README에서 선정 지표로 언급되지만 결과 점수는 공개되어 있지 않아 수치를 추가하지 않았습니다.",
           },
           {
-            src: "/projects/hairstyle/readme/image_generation_evaluation.png",
-            alt: "이미지 생성 품질과 얼굴 유사도 평가 결과",
-            caption: "IMAGE GENERATION EVALUATION",
-            className: "overview-wide evaluation-wide",
+            title: "Image Generation Evaluation",
+            columns: ["평가 항목", "평가 종류", "평가지표", "평가 결과"],
+            rows: [
+              ["이미지 품질", "정량", "CLIP-IQA", "0.82"],
+              ["원본 얼굴 유사도", "정량", "ArcFace", "0.80"],
+              ["질의 부합성", "정성", "자체평가", "P"],
+              ["할루시네이션", "정성", "자체평가", "P"],
+              ["응답시간", "정량", "—", "60초"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "1-8. 서비스 시연",
+        layout: "reference",
+        paragraphs: [
+          "README에 공개된 서비스 결과 예시와 시연 영상입니다. 아래 영상 썸네일 또는 페이지 상단의 DEMO VIDEO 버튼을 누르면 YouTube에서 전체 시연을 볼 수 있습니다.",
+        ],
+        images: [
+          {
+            src: "/projects/hairstyle/readme/sample.png",
+            alt: "GitHub README에 공개된 Hairstyle is All You Need 서비스 결과 예시",
+            caption: "서비스 결과 예시",
+            className: "overview-wide",
+            width: 4491,
+            height: 2120,
+          },
+          {
+            src: "/projects/hairstyle/readme/demo_thumbnail.png",
+            alt: "YouTube에서 Hairstyle is All You Need 시연 영상 보기",
+            caption: "시연 영상 — YouTube에서 보기 ↗",
+            className: "overview-wide",
+            href: "https://youtu.be/_GqkF_I5t7A",
+            width: 1836,
+            height: 980,
           },
         ],
       },

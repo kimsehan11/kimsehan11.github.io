@@ -3,12 +3,19 @@ import { notFound } from "next/navigation";
 import { projects, type ProjectSectionImage } from "../../data/projects";
 
 function ProjectImages({ images }: { images: ProjectSectionImage[] }) {
-  const renderImage = (item: ProjectSectionImage) => (
-    <figure className={item.className} key={item.src}>
-      {item.caption && <figcaption>{item.caption}</figcaption>}
-      <div><img src={item.src} alt={item.alt} /></div>
-    </figure>
-  );
+  const renderImage = (item: ProjectSectionImage) => {
+    const picture = <img src={item.src} alt={item.alt} width={item.width} height={item.height} loading={item.width && item.height ? "lazy" : undefined} />;
+    return (
+      <figure className={item.className} key={item.src}>
+        {item.caption && <figcaption>{item.caption}</figcaption>}
+        <div>
+          {item.href
+            ? <a href={item.href} target="_blank" rel="noreferrer">{picture}</a>
+            : picture}
+        </div>
+      </figure>
+    );
+  };
   const groups = [...new Set(images.map((item) => item.group ?? "default"))];
 
   return (
@@ -56,6 +63,11 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
             {project.paper && (
               <a className="sheet-paper" href={project.paper.href} target="_blank" rel="noreferrer">
                 {project.paper.label} <span aria-hidden="true">↗</span>
+              </a>
+            )}
+            {project.demo && (
+              <a className="sheet-paper sheet-demo" href={project.demo.href} target="_blank" rel="noreferrer" aria-label="YouTube에서 시연 영상 보기">
+                {project.demo.label} <span aria-hidden="true">↗</span>
               </a>
             )}
           </div>
@@ -117,6 +129,32 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                 <ProjectImages images={section.images} />
               )}
             </div>
+            {section.tables && (
+              <div className="project-section-tables">
+                {section.tables.map((table) => (
+                  <div key={table.title}>
+                    <div className="project-table-wrap">
+                      <table className="project-table">
+                        <caption>{table.title}</caption>
+                        <thead>
+                          <tr>{table.columns.map((column) => <th scope="col" key={column}>{column}</th>)}</tr>
+                        </thead>
+                        <tbody>
+                          {table.rows.map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                              {row.map((cell, columnIndex) => columnIndex === 0
+                                ? <th scope="row" key={columnIndex}>{cell}</th>
+                                : <td key={columnIndex}>{cell}</td>)}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    {table.note && <p className="project-table-note">{table.note}</p>}
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
         ))}
         <div className="sheet-tags">{project.stack.map((item) => <span key={item}>{item}</span>)}</div>

@@ -150,6 +150,79 @@ test("results columns shrink to fit and do not share fixed image rows or heights
   assert.match(css, /\.project-section-images,\.project-section--results \.project-section-images\{grid-template-columns:1fr\}/);
 });
 
+test("hairstyle demo uses the paper-style button in the left overview", async () => {
+  const html = await readFile(join(output, "project/hairstyle-is-all-you-need/index.html"), "utf8");
+  const overview = html.match(/<section class="sheet-content">([\s\S]*?)<\/section>/)?.[1];
+  assert.ok(overview);
+  const left = overview.split('<p class="sheet-label">MY WORK</p>')[0];
+  assert.match(left, /<a class="sheet-paper sheet-demo" href="https:\/\/youtu\.be\/_GqkF_I5t7A" target="_blank" rel="noreferrer" aria-label="YouTube에서 시연 영상 보기">DEMO VIDEO/);
+  const knowledge = await readFile(join(output, "project/knowledge-conflicts/index.html"), "utf8");
+  assert.match(knowledge, /class="sheet-paper" href="https:\/\/arxiv\.org\/abs\/2410\.07176"[^>]*>ASTUTE RAG PAPER/);
+  assert.doesNotMatch(knowledge, /sheet-demo/);
+});
+
+test("hairstyle covers README design details while keeping the code flow and excluding ERD", async () => {
+  const html = await readFile(join(output, "project/hairstyle-is-all-you-need/index.html"), "utf8");
+  for (const text of [
+    "뷰티 산업의 변화", "프로젝트의 필요성", "최신 트렌드 정보",
+    "상세 데이터 구축", "QA 캐시 시스템", "기장 인지 알고리즘", "가중치 기반 추천", "응답 히스토리",
+    "화이트밸런스", "퍼스널 컬러", "평가 데이터셋 구축", "GPT-4o", "Answer Relevancy",
+    "dragonkue/snowflake-arctic-embed-l-v2.0-ko", "Dongjin-kr/ko-reranker",
+    "gpt-5.2-chat-latest", "IdentiFace", "SkinToneClassifier", "SAFMN", "gpt-image-1", "Face Lift",
+  ]) {
+    assert.ok(html.includes(text), "Missing README detail: " + text);
+  }
+  assert.match(html, /<h2>1-6\. 실제 코드 플로우<\/h2>/);
+  assert.match(html, /class="project-code-flow"/);
+  assert.match(html, /<h2>1-7\. 평가 및 최적화<\/h2>/);
+  assert.match(html, /<h2>1-8\. 서비스 시연<\/h2>/);
+  assert.doesNotMatch(html, /<img\b[^>]*src="[^"]*(?:erd|evaluation)[^"]*"|<h[23]>[^<]*ERD/);
+});
+
+test("README tables preserve all reported models, settings and evaluation scores as text", async () => {
+  const html = await readFile(join(output, "project/hairstyle-is-all-you-need/index.html"), "utf8");
+  const tables = new Map([...html.matchAll(/<table class="project-table"><caption>([^<]+)<\/caption>([\s\S]*?)<\/table>/g)]
+    .map(([, title, markup]) => [title, markup]));
+  const expected = [
+    ["기술 스택", 7], ["RAG 모델 및 검색 설정", 5], ["에이전트·얼굴 분석·이미지 합성 모델", 7],
+    ["Recommendation Evaluation", 9], ["Image Generation Evaluation", 5],
+  ];
+  assert.deepEqual([...tables.keys()], expected.map(([title]) => title));
+  for (const [title, count] of expected) {
+    const table = tables.get(title);
+    assert.match(table, /<th scope="col">/);
+    const rows = table.match(/<tbody>([\s\S]*?)<\/tbody>/)?.[1];
+    assert.equal((rows.match(/<tr>/g) ?? []).length, count);
+    assert.equal((rows.match(/<th scope="row">/g) ?? []).length, count);
+  }
+  const rag = tables.get("RAG 모델 및 검색 설정");
+  for (const [key, value] of [["Chunk size", "200"], ["Overlap", "100"], ["Top K", "2"]]) {
+    assert.ok(rag.includes('<th scope="row">' + key + '</th><td>' + value + '</td>'));
+  }
+  const recommendation = tables.get("Recommendation Evaluation");
+  for (const [metric, score] of [["Context Recall", "0.75"], ["Context Precision", "0.94"], ["MRR", "0.97"], ["NDCG", "0.94"], ["Faithfulness", "0.91"]]) {
+    assert.ok(recommendation.includes("<td>" + metric + "</td><td>" + score + "</td>"));
+  }
+  assert.match(recommendation, /<td>20초<\/td>/);
+  const generation = tables.get("Image Generation Evaluation");
+  assert.match(generation, /<td>CLIP-IQA<\/td><td>0\.82<\/td>/);
+  assert.match(generation, /<td>ArcFace<\/td><td>0\.80<\/td>/);
+  assert.match(generation, /<td>60초<\/td>/);
+});
+
+test("README assets include a linked demo thumbnail with intrinsic size and responsive presentation", async () => {
+  const html = await readFile(join(output, "project/hairstyle-is-all-you-need/index.html"), "utf8");
+  for (const name of ["Mckinsey.png", "popularity.png", "sample.png", "demo_thumbnail.png"]) {
+    assert.ok(html.includes('src="/projects/hairstyle/readme/' + name + '"'));
+  }
+  assert.match(html, /<a href="https:\/\/youtu\.be\/_GqkF_I5t7A" target="_blank" rel="noreferrer"><img[^>]*src="\/projects\/hairstyle\/readme\/demo_thumbnail\.png"[^>]*width="1836"[^>]*height="980"[^>]*loading="lazy"/);
+  assert.match(html, /<img[^>]*src="\/projects\/hairstyle\/readme\/sample\.png"[^>]*width="4491"[^>]*height="2120"[^>]*loading="lazy"/);
+  const css = await readFile(join(root, "app/globals.css"), "utf8");
+  assert.match(css, /\.project-table\{width:100%;table-layout:fixed/);
+  assert.match(css, /\.project-table-wrap\{max-width:100%;overflow-x:auto\}/);
+  assert.match(css, /\.project-section--reference \.project-section-images \.overview-wide img\{height:auto;max-height:none\}/);
+});
+
 test("exports all portfolio routes as directly accessible HTML", async () => {
   assert.equal(slugs.length, 3);
   const pages = ["index.html", "main/index.html", "profile/index.html", "project/index.html", "404.html", ...slugs.map((slug) => `project/${slug}/index.html`)];

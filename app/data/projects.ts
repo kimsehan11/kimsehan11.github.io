@@ -527,7 +527,7 @@ export const projects: Project[] = [
       href: "https://arxiv.org/abs/2410.07176",
     },
     presentation: {
-      label: "PROJECT PRESENTATION",
+      label: "PROJECT DETAILS",
       href: "https://docs.google.com/presentation/d/1EEn4TS_AIj_fciUa4-jtFux3lafq9xPP_jzAAeani5E/edit?usp=sharing",
     },
     sections: [
@@ -622,7 +622,7 @@ export const projects: Project[] = [
             "items": [
               "SERPER API를 통해 검색 결과의 snippet과 link를 수집합니다.",
               "30개의 검색 결과 중 접근 가능한 링크를 크롤링하고, snippet을 포함하는 문단을 외부 문서로 사용합니다.",
-              "발표 예시는 ‘apple inc’ 검색에서 링크·스니펫을 얻고 해당 웹페이지의 관련 문단을 찾는 과정을 보여줍니다."
+              "‘apple inc’ 검색에서 링크·스니펫을 얻고 해당 웹페이지의 관련 문단을 찾는 과정을 예시로 보여줍니다."
             ]
           }
         ],
@@ -675,7 +675,7 @@ export const projects: Project[] = [
               "외부 문서 E와 내부 문서 I를 하나의 문서 목록으로 결합합니다.",
               "LLM이 정보의 출처를 구별할 수 있도록 page_content와 함께 source를 저장합니다.",
               "외부 문서는 source: external, 내부 문서는 source: internal로 표시합니다.",
-              "발표자료의 코드는 외부 문서 목록 뒤에 해당 질문의 내부 문서를 붙여 combine_passages를 구성합니다."
+              "외부 문서 목록 뒤에 해당 질문의 내부 문서를 붙여 combine_passages를 구성합니다."
             ]
           }
         ],
@@ -705,7 +705,7 @@ export const projects: Project[] = [
             "title": "동일한 답변을 지지하는 문서끼리 그룹화",
             "items": [
               "결합된 문서 중 같은 답을 주장하는 문서를 묶고, 질문과 무관한 문서는 별도로 분리합니다.",
-              "발표 예시의 질문은 ‘Alvin and the Chipmunks에서 David를 연기한 사람은 누구인가?’입니다.",
+              "예시 질문은 ‘Alvin and the Chipmunks에서 David를 연기한 사람은 누구인가?’입니다.",
               "외부 검색은 Jason Lee를, 모델의 내부 문서는 Zachary Levi를 제시해 지식 충돌이 발생합니다.",
               "Group A는 Jason Lee를 지지하는 외부 문서, Group B는 Zachary Levi를 주장하는 내부·외부 문서, Group C는 질문과 무관한 문서로 정리합니다."
             ]
@@ -803,7 +803,7 @@ export const projects: Project[] = [
             ]
           },
           {
-            "title": "발표자료의 판정 예시",
+            "title": "정답 판정 예시",
             "items": [
               "질문: ‘Who was the director of His Way?’",
               "Step 1에서 Douglas McGrath를 지지하는 문서를 묶고, 다른 동명 영화에 관한 문서는 무관한 정보로 분리합니다.",
@@ -879,7 +879,7 @@ export const projects: Project[] = [
                 "61.7"
               ]
             ],
-            "note": "발표자료 p.18의 논문 인용 결과."
+            "note": "논문 인용 결과."
           },
           {
             "title": "논문 — Mistral-Large (2407), 128B",
@@ -917,7 +917,7 @@ export const projects: Project[] = [
                 "59.9"
               ]
             ],
-            "note": "발표자료 p.18의 논문 인용 결과."
+            "note": "논문 인용 결과."
           },
           {
             "title": "논문 — Mistral-Nemo (2407), 12B",
@@ -955,7 +955,7 @@ export const projects: Project[] = [
                 "51.3"
               ]
             ],
-            "note": "발표자료 p.18–19."
+            "note": "논문 보고값."
           },
           {
             "title": "재현 — Mistral-Nemo (2407), 12B",
@@ -993,7 +993,7 @@ export const projects: Project[] = [
                 "66.4"
               ]
             ],
-            "note": "발표자료 p.19. Baseline 대비 Overall +6.6%p."
+            "note": "Baseline 대비 Overall +6.6%p."
           },
           {
             "title": "논문 — Gemini 1.5 Pro (002)",
@@ -1031,7 +1031,7 @@ export const projects: Project[] = [
                 "59.2"
               ]
             ],
-            "note": "발표자료 p.18, 20. 아래 재현 실험과는 모델 버전이 다릅니다."
+            "note": "아래 재현 실험과는 모델 버전이 다릅니다."
           },
           {
             "title": "재현 — Gemini-2.5 Flash",
@@ -1069,7 +1069,7 @@ export const projects: Project[] = [
                 "70.2"
               ]
             ],
-            "note": "발표자료 p.20. Baseline 대비 Overall +9.2%p."
+            "note": "Baseline 대비 Overall +9.2%p."
           }
         ]
       },
@@ -1079,16 +1079,16 @@ export const projects: Project[] = [
           {
             "title": "논문보다 높은 재현 정확도의 해석",
             "items": [
-              "발표자료는 검색 대상 코퍼스가 계속 업데이트된다는 점을 정확도 차이의 요인으로 설명합니다.",
+              "검색 대상 코퍼스의 지속적인 업데이트를 정확도 차이의 가능한 요인으로 분석했습니다.",
               "예시로 웹 문서의 변경 이력을 제시해 논문 당시와 재현 시점의 검색 정보가 같지 않을 수 있음을 보여줍니다.",
-              "이는 발표자료에서 제시한 해석이며, 코퍼스 변화만을 분리해 효과를 측정한 실험 결과로 단정하지 않습니다."
+              "이는 코퍼스 변화에 대한 해석이며, 해당 요인만을 분리해 효과를 측정한 실험 결과로 단정하지 않습니다."
             ]
           }
         ],
         "images": [
           {
             "src": "/projects/knowledge-conflicts/slides/corpus-updates.jpg",
-            "alt": "발표자료에서 검색 코퍼스의 지속적인 업데이트 사례로 제시한 문서 변경 이력",
+            "alt": "검색 코퍼스의 지속적인 업데이트를 보여주는 문서 변경 이력",
             "caption": "RETRIEVAL CORPUS UPDATES",
             "className": "overview-wide",
             "width": 909,
@@ -1126,7 +1126,7 @@ export const projects: Project[] = [
             "title": "80~90% 구간의 예외",
             "items": [
               "재현 그래프의 80~90% 구간에서는 Astute RAG의 Accuracy가 Baseline보다 소폭 낮은 경우가 관찰됩니다.",
-              "발표자료는 외부 문서만 사용하는 Baseline과 달리 Astute RAG가 모델 자체의 내부 지식 품질에도 영향을 받기 때문이라고 해석합니다.",
+              "외부 문서만 사용하는 Baseline과 달리 Astute RAG는 모델 자체의 내부 지식 품질에도 영향을 받기 때문으로 해석했습니다.",
               "따라서 모든 구간에서 반드시 우월하다는 결론이 아니라, 전반적인 강건성 향상과 함께 예외를 보고합니다."
             ]
           }
@@ -1142,7 +1142,7 @@ export const projects: Project[] = [
           },
           {
             "src": "/projects/knowledge-conflicts/slides/precision-groups.png",
-            "alt": "질문을 검색 정밀도 구간별로 나눈 뒤 그룹별 정확도를 측정하는 발표자료 도식",
+            "alt": "질문을 검색 정밀도 구간별로 나눈 뒤 그룹별 정확도를 측정하는 도식",
             "caption": "SPLIT TEST DATASET",
             "className": "overview-wide",
             "width": 1334,

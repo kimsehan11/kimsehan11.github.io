@@ -1,12 +1,28 @@
-import Link from "next/link";
+"use client";
 
+import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { projects } from "../data/projects";
 
 const months = ["JUN", "DEC", "MAR"];
 
 export default function ProjectPage() {
+  const pageRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const page = pageRef.current;
+    if (!page) return;
+    const moveSideways = (event: WheelEvent) => {
+      if (window.matchMedia("(max-width: 760px)").matches) return;
+      event.preventDefault();
+      page.scrollLeft += event.deltaY + event.deltaX;
+    };
+    page.addEventListener("wheel", moveSideways, { passive: false });
+    return () => page.removeEventListener("wheel", moveSideways);
+  }, []);
+
   return (
-    <main className="album-page">
+    <main className="album-page" ref={pageRef}>
       <Link className="mark mark-light album-ks" href="/main" aria-label="메인으로 돌아가기">KS</Link>
       <section className="album-grid">
         {projects.map((project, index) => (

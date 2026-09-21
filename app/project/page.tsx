@@ -5,9 +5,6 @@ import { projects } from "../data/projects";
 const months = ["JUN", "DEC", "MAR"];
 
 export default function ProjectPage() {
-  return () => page.removeEventListener("wheel", moveSideways);
-  }, []);
-
   return (
     <main className="album-page">
       <Link className="mark mark-light album-ks" href="/main" aria-label="메인으로 돌아가기">KS</Link>

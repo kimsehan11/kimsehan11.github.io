@@ -51,25 +51,6 @@ export default function ProjectPage() {
             </Link>
           </article>
         ))}
-        <article className="album-item album-item-next">
-          <div className="album-card">
-            <div className="album-role">
-              <span>NEXT PROJECT</span>
-              <span>/</span>
-              <span>Natural Language to Database Query</span>
-            </div>
-            <h2>Text-to-SQL</h2>
-            <div className="album-foot">
-              <span>COMING<br />SOON</span>
-              <span>2026<br />WIP</span>
-            </div>
-          </div>
-          <div className="album-disc sql-disc" aria-hidden="true">
-            <div className="disc-grooves" />
-            <div className="disc-label"><b>SQL</b><span>SELECT *</span></div>
-            <div className="disc-hole" />
-          </div>
-        </article>
       </section>
     </main>
   );
